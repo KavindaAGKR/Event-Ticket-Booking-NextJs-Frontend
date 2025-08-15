@@ -1,4 +1,3 @@
-// Backend API authentication utilities
 
 interface SignUpData {
   email: string;

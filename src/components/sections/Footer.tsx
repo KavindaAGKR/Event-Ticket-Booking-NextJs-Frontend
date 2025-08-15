@@ -18,36 +18,6 @@ import {
 export default function Footer() {
   return (
     <footer className="bg-gray-950 border-t border-gray-800">
-      {/* Newsletter Section */}
-      <div className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-white mb-2">
-              Stay in the Loop
-            </h3>
-            <p className="text-gray-400 mb-6">
-              Subscribe to our newsletter and be the first to know about
-              upcoming events and exclusive offers
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 bg-gray-800 border-gray-700"
-              />
-              <Button
-                onClick={() => {
-                  /* Handle newsletter signup */
-                }}
-              >
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

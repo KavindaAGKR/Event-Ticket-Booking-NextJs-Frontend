@@ -1,4 +1,3 @@
-// Event-related utilities and API functions
 
 export interface Event {
   id?: string;
