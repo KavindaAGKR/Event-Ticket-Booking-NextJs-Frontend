@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import {
   formatDate,
@@ -31,7 +33,8 @@ import {
 } from "lucide-react";
 
 export default function MyBookingsPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
+  const { success, error } = useToast();
   const router = useRouter();
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<BookingResponse[]>(
@@ -41,14 +44,20 @@ export default function MyBookingsPage() {
   const [cancellingBooking, setCancellingBooking] = useState<string | null>(
     null
   );
+  const [bookingToCancel, setBookingToCancel] =
+    useState<BookingResponse | null>(null);
   const [statusFilter, setStatusFilter] = useState<
     BookingResponse["status"] | "ALL"
   >("ALL");
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       router.push("/auth/signin");
       return;
+    }
+
+    if (!user) {
+      return; // Wait for user to be loaded
     }
 
     const fetchBookings = async () => {
@@ -73,7 +82,7 @@ export default function MyBookingsPage() {
     };
 
     fetchBookings();
-  }, [user, router]);
+  }, [user, router, authLoading]);
 
   // Filter bookings when status filter changes
   useEffect(() => {
@@ -91,23 +100,36 @@ export default function MyBookingsPage() {
     setFilteredBookings(sortedFiltered);
   }, [bookings, statusFilter]);
 
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show loading if user is not authenticated (will redirect)
   if (!user) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Redirecting...</div>
+      </div>
+    );
   }
 
   const handleCancelBooking = async (booking: BookingResponse) => {
-    if (
-      !confirm(
-        "Are you sure you want to cancel this booking? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-    const bookingId = booking.id;
+    setBookingToCancel(booking);
+  };
+
+  const confirmCancelBooking = async () => {
+    if (!bookingToCancel) return;
+
+    const bookingId = bookingToCancel.id;
     setCancellingBooking(bookingId);
 
     try {
-      await cancelBooking(booking);
+      await cancelBooking(bookingToCancel);
 
       // Update local state
       setBookings((prev) =>
@@ -118,11 +140,18 @@ export default function MyBookingsPage() {
         )
       );
 
-      alert("Booking cancelled successfully!");
+      success(
+        "Booking Cancelled",
+        "Your booking has been cancelled successfully."
+      );
     } catch (error: any) {
-      alert(error.message || "Failed to cancel booking. Please try again.");
+      error(
+        "Cancellation Failed",
+        error.message || "Failed to cancel booking. Please try again."
+      );
     } finally {
       setCancellingBooking(null);
+      setBookingToCancel(null);
     }
   };
 
@@ -427,6 +456,19 @@ export default function MyBookingsPage() {
           </div>
         )}
       </div>
+
+      {/* Cancel Booking Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={!!bookingToCancel}
+        onClose={() => setBookingToCancel(null)}
+        onConfirm={confirmCancelBooking}
+        title="Cancel Booking"
+        description="Are you sure you want to cancel this booking? This action cannot be undone and you may not receive a full refund."
+        confirmText="Cancel Booking"
+        cancelText="Keep Booking"
+        variant="destructive"
+        isLoading={!!cancellingBooking}
+      />
     </div>
   );
 }

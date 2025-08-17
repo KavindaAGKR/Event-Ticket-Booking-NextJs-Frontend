@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export default function CreateEventPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,16 +39,36 @@ export default function CreateEventPage() {
 
   // Handle authentication redirect
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       router.push("/auth/signin");
     }
-  }, [user, router]);
+  }, [user, router, authLoading]);
 
-  // Show loading or nothing while redirecting
+  // Update form data when user loads
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        organizerName: user.name || "",
+        organizerEmail: user.email || "",
+      }));
+    }
+  }, [user]);
+
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-white">Redirecting to login...</div>
+        <div className="text-white">Redirecting...</div>
       </div>
     );
   }

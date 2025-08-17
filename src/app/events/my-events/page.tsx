@@ -29,14 +29,25 @@ import {
 } from "lucide-react";
 
 export default function EventsPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
 
+  // First useEffect - handle authentication and fetch events
   useEffect(() => {
+    // Check authentication first
+    if (!authLoading && !user) {
+      router.push("/auth/signin");
+      return;
+    }
+
+    if (!user) {
+      return; // Wait for user to be loaded
+    }
+
     // Fetch events from API or mock data
     const fetchEvents = async () => {
       try {
@@ -49,13 +60,9 @@ export default function EventsPage() {
     };
 
     fetchEvents();
-  }, []);
-  const handleEventClick = (event: Event) => {
-    router.push(`/events/${event.id}`);
-  };
+  }, [user, router, authLoading]);
 
-  const categories = ["All", ...EVENT_CATEGORIES];
-
+  // Second useEffect - handle filtering (must be before any conditional returns)
   useEffect(() => {
     let filtered = events;
 
@@ -70,7 +77,7 @@ export default function EventsPage() {
     }
 
     // Filter by category
-    if (selectedCategory !== "All") {
+    if (selectedCategory && selectedCategory !== "All") {
       filtered = filtered.filter(
         (event) => event.category === selectedCategory
       );
@@ -78,6 +85,31 @@ export default function EventsPage() {
 
     setFilteredEvents(filtered);
   }, [events, searchTerm, selectedCategory]);
+
+  // Now we can have conditional returns after all hooks are defined
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show loading if user is not authenticated (will redirect)
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Redirecting...</div>
+      </div>
+    );
+  }
+
+  const handleEventClick = (event: Event) => {
+    router.push(`/events/${event.id}`);
+  };
+
+  const categories = ["All", ...EVENT_CATEGORIES];
 
   return (
     <div>

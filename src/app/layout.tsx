@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../../globals.css";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
+import { ToastProvider } from "@/components/ui/toast";
 import Header from "@/components/sections/Header";
 import Footer from "@/components/sections/Footer";
 
@@ -18,13 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen bg-gray-950 text-white antialiased">
-        <AuthProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

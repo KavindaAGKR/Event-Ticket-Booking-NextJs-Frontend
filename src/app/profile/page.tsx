@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,12 +23,11 @@ import {
 import { updateUserDetails } from "@/lib/auth/cognito";
 
 export default function ProfilePage() {
-  const { user, logout, refreshUser } = useAuth();
+  const { user, logout, refreshUser, isLoading: authLoading } = useAuth();
+  const { success, error } = useToast();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   // Form state for editing profile
   const [formData, setFormData] = useState({
@@ -36,20 +36,31 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (!user) {
+    // Only redirect if auth loading is complete and user is not authenticated
+    if (!authLoading && !user) {
       router.push("/auth/signin");
-    } else {
+    } else if (user) {
       setFormData({
         name: user.name || "",
         email: user.email || "",
       });
     }
-  }, [user, router]);
+  }, [user, router, authLoading]);
 
-  if (!user) {
+  // Show loading while authentication is being checked
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show loading if user is not authenticated (will redirect)
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Redirecting...</div>
       </div>
     );
   }
@@ -64,20 +75,17 @@ export default function ProfilePage() {
 
   const handleSaveProfile = async () => {
     setIsLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
+      await updateUserDetails(formData, user.id);
 
-      await updateUserDetails(formData, user.id)
-
-      setSuccess("Profile updated successfully!");
+      success("Profile Updated", "Your profile has been updated successfully!");
       setIsEditing(false);
 
       // Refresh user data
       await refreshUser();
-    } catch (error: any) {
-      setError(error.message || "Failed to update profile");
+    } catch (err: any) {
+      error("Update Failed", err.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
@@ -89,8 +97,6 @@ export default function ProfilePage() {
       email: user.email || "",
     });
     setIsEditing(false);
-    setError("");
-    setSuccess("");
   };
 
   const getRoleDisplay = (roles?: Array<"user" | "admin" | "organizer">) => {
@@ -211,19 +217,6 @@ export default function ProfilePage() {
                   </Button>
                 )}
               </div>
-
-              {/* Success/Error Messages */}
-              {success && (
-                <div className="mb-4 p-3 bg-green-900/50 border border-green-700 rounded-md">
-                  <p className="text-green-300 text-sm">{success}</p>
-                </div>
-              )}
-
-              {error && (
-                <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-md">
-                  <p className="text-red-300 text-sm">{error}</p>
-                </div>
-              )}
 
               <div className="space-y-4">
                 {/* Name Field */}

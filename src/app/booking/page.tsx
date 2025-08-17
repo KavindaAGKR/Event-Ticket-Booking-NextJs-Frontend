@@ -36,7 +36,7 @@ import {
 export default function BookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
   // Get URL parameters
   const eventId = searchParams.get("eventId");
@@ -62,6 +62,13 @@ export default function BookingPage() {
       cvc: "",
     },
   });
+
+  // Check authentication
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/auth/signin");
+    }
+  }, [user, router, authLoading]);
 
   // Fetch event data
   useEffect(() => {
@@ -98,18 +105,29 @@ export default function BookingPage() {
       }
     };
 
-    fetchEvent();
-  }, [eventId, router, user]);
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!user && !isLoading) {
-      router.push(
-        "/auth/signin?redirect=" +
-          encodeURIComponent(`/booking?eventId=${eventId}&quantity=${quantity}`)
-      );
+    // Only fetch event if user is authenticated or auth loading is complete
+    if (!authLoading && user) {
+      fetchEvent();
     }
-  }, [user, isLoading, router, eventId, quantity]);
+  }, [eventId, router, user, authLoading]);
+
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show loading if user is not authenticated (will redirect)
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Redirecting to sign in...</div>
+      </div>
+    );
+  }
 
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
