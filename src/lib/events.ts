@@ -1,4 +1,3 @@
-
 export interface Event {
   id?: string;
   name: string;
@@ -9,7 +8,7 @@ export interface Event {
   endDateTime: string;
   ticketPrice: number;
   totalTickets: number;
-  soldTickets?: number; 
+  soldTickets?: number;
   category: string;
   imageUrl: string;
   organizerName: string;
@@ -75,6 +74,31 @@ export async function getEvents(filters?: EventFilters): Promise<Event[]> {
 
     const queryString = queryParams.toString();
     const endpoint = `/events/get-all-events`;
+
+    const response = await apiCall(endpoint);
+    return response.data || [];
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
+    return [];
+  }
+}
+
+// Fetch all events
+export async function getOrganizerEvents(
+  filters?: EventFilters
+): Promise<Event[]> {
+  try {
+    // const queryParams = new URLSearchParams();
+
+    // if (filters?.search) queryParams.append("search", filters.search);
+    // if (filters?.category && filters.category !== "All") {
+    //   queryParams.append("category", filters.category);
+    // }
+    // if (filters?.location) queryParams.append("location", filters.location);
+
+    //const queryString = queryParams.toString();
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    const endpoint = `/events/my-events`;
 
     const response = await apiCall(endpoint);
     return response.data || [];
@@ -235,9 +259,9 @@ export const formatTime = (dateString: string) => {
 };
 
 export const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-LK", {
     style: "currency",
-    currency: "USD",
+    currency: "LKR",
   }).format(price);
 };
 

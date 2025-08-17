@@ -44,11 +44,11 @@ export default function SignIn() {
     try {
       const result = await signInUser(formData);
 
-      if (result.success  && result.token) {
+      if (result.success && result.token) {
         // Update auth context
         login(result.data.user, result.token);
-        // Redirect to dashboard
-        
+        // Redirect to home
+        router.push("/");
       } else {
         setError(result.message);
       }
@@ -73,7 +73,7 @@ export default function SignIn() {
             className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to EventTix
+            Back to myEvents
           </Link>
         </div>
 
@@ -90,7 +90,7 @@ export default function SignIn() {
               Welcome Back
             </CardTitle>
             <CardDescription className="text-gray-400">
-              Sign in to your EventTix account
+              Sign in to your myEvents account
             </CardDescription>
           </CardHeader>
 

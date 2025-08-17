@@ -48,7 +48,7 @@ async function apiCall(
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        //...(token && { Authorization: `Bearer ${token}` }),
+        ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       },
       ...options,
@@ -143,6 +143,7 @@ export async function signInUser(data: SignInData): Promise<AuthResult> {
               decodedToken.given_name + " " + decodedToken.family_name,
             userType: decodedToken.userType || decodedToken["custom:userType"],
             isVerified: decodedToken.email_verified || true,
+            role: decodedToken["cognito:groups"] || [],
             // Include any other user attributes from the token
             ...Object.keys(decodedToken)
               .filter(
@@ -385,3 +386,44 @@ export async function resetPassword(
     };
   }
 }
+
+
+export const updateUserDetails = async (
+  userData: Partial<User>,
+  userId: string
+): Promise<AuthResult> => {
+  try {
+    const response = await apiCall(`/auth/update`, {
+      method: "POST",
+      body: JSON.stringify({ name: userData.name }),
+    });
+
+    // Update only the name in the cached user object
+    if (response.status === "SUCCESS") {
+      const cachedUser = localStorage.getItem("user");
+      let updatedUser = response.user;
+      if (cachedUser) {
+        try {
+          const userObj = JSON.parse(cachedUser);
+          updatedUser = { ...userObj, name: userData.name };
+        } catch (e) {
+          updatedUser = { ...response.user, name: userData.name };
+        }
+      }
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+
+    return {
+      success: true,
+      message: response.message || "User details updated successfully.",
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error("Update user details error:", error);
+    return {
+      success: false,
+      message:
+        error.message || "Failed to update user details. Please try again.",
+    };
+  }
+};

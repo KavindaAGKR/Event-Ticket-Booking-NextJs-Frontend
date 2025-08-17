@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Authentication - EventTix",
+  title: "Authentication - myEvents",
   description:
-    "Sign in or create your EventTix account to discover and book amazing events.",
+    "Sign in or create your myEvents account to discover and book amazing events.",
 };
 
 export default function AuthLayout({

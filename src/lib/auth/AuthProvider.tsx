@@ -14,6 +14,7 @@ interface User {
   email: string;
   name?: string;
   isVerified: boolean;
+  role?: Array<"user" | "admin" | "organizer">;
 }
 
 interface AuthContextType {

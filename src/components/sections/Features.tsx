@@ -93,7 +93,7 @@ export default function Features() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Why Choose EventTix?
+            Why Choose myEvents?
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             We're committed to providing the best event booking experience with

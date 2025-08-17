@@ -15,6 +15,7 @@ import {
   formatPrice,
   getEventStatus,
   getEvents,
+  getOrganizerEvents,
 } from "@/lib/events";
 import {
   Plus,
@@ -39,7 +40,7 @@ export default function EventsPage() {
     // Fetch events from API or mock data
     const fetchEvents = async () => {
       try {
-        const response = await getEvents();
+        const response = await getOrganizerEvents();
         setEvents(response);
       } catch (error) {
         console.error("Failed to fetch events:", error);
@@ -50,7 +51,6 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
   const handleEventClick = (event: Event) => {
-    // Navigate to event details page with eventId
     router.push(`/events/${event.id}`);
   };
 
@@ -85,11 +85,18 @@ export default function EventsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Events</h1>
-            <p className="text-gray-400">
-              Discover amazing events happening around you
-            </p>
+            <h1 className="text-3xl font-bold text-white mb-2">My Events</h1>
+            <p className="text-gray-400">Manage and organize your events</p>
           </div>
+
+          {user && (
+            <Link href="/events/create">
+              <Button className="mt-4 md:mt-0">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Event
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Search and Filters */}
@@ -232,8 +239,19 @@ export default function EventsPage() {
               <h3 className="text-xl font-medium text-gray-300 mb-2">
                 No events found
               </h3>
-              <p>Try adjusting your search terms or filters</p>
+              <p>
+                You haven't created any events yet. Start by creating your first
+                event!
+              </p>
             </div>
+            {user && (
+              <Link href="/events/create">
+                <Button className="mt-4">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Your First Event
+                </Button>
+              </Link>
+            )}
           </div>
         )}
       </div>

@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth/AuthProvider";
-import { CreateEventData, EVENT_CATEGORIES, createEvent } from "@/lib/events";
-import ImageUploader from "./ImageUploader";
+import {
+  Event,
+  CreateEventData,
+  EVENT_CATEGORIES,
+  updateEvent,
+  getEventById,
+} from "@/lib/events";
+import ImageUploader from "../../create/ImageUploader";
 import {
   ArrowLeft,
   Calendar,
@@ -16,11 +22,16 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 
-export default function CreateEventPage() {
+export default function EditEventPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const params = useParams();
+  const eventId = params.eventId as string;
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingEvent, setIsLoadingEvent] = useState(true);
   const [error, setError] = useState("");
+  const [originalEvent, setOriginalEvent] = useState<Event | null>(null);
 
   const [formData, setFormData] = useState<CreateEventData>({
     name: "",
@@ -37,6 +48,70 @@ export default function CreateEventPage() {
     organizerEmail: user?.email || "",
   });
 
+  // Fetch event data on component mount
+  useEffect(() => {
+    const fetchEvent = async () => {
+      if (!eventId) return;
+
+      try {
+        setIsLoadingEvent(true);
+        const event = await getEventById(eventId);
+
+        if (!event) {
+          setError("Event not found");
+          return;
+        }
+
+        // Check if user is authorized to edit this event
+        if (
+          user?.email !== event.organizerEmail &&
+          !user?.role?.includes("admin")
+        ) {
+          setError("You are not authorized to edit this event");
+          return;
+        }
+
+        setOriginalEvent(event);
+
+        // Convert the dates to the format expected by datetime-local input
+        const formatDateTimeForInput = (dateTimeString: string) => {
+          const date = new Date(dateTimeString);
+          // Format to YYYY-MM-DDTHH:MM format
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          const hours = String(date.getHours()).padStart(2, "0");
+          const minutes = String(date.getMinutes()).padStart(2, "0");
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
+        };
+
+        setFormData({
+          name: event.name,
+          description: event.description,
+          location: event.location,
+          venue: event.venue,
+          startDateTime: formatDateTimeForInput(event.startDateTime),
+          endDateTime: formatDateTimeForInput(event.endDateTime),
+          ticketPrice: event.ticketPrice,
+          totalTickets: event.totalTickets,
+          category: event.category,
+          imageUrl: event.imageUrl,
+          organizerName: event.organizerName,
+          organizerEmail: event.organizerEmail,
+        });
+      } catch (error: any) {
+        console.error("Failed to fetch event:", error);
+        setError(error.message || "Failed to load event");
+      } finally {
+        setIsLoadingEvent(false);
+      }
+    };
+
+    if (user) {
+      fetchEvent();
+    }
+  }, [eventId, user]);
+
   // Handle authentication redirect
   useEffect(() => {
     if (!user) {
@@ -49,6 +124,30 @@ export default function CreateEventPage() {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-white">Redirecting to login...</div>
+      </div>
+    );
+  }
+
+  // Show loading while fetching event
+  if (isLoadingEvent) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Loading event...</div>
+      </div>
+    );
+  }
+
+  // Show error if any
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-400 mb-4">Error</h1>
+          <p className="text-gray-300 mb-4">{error}</p>
+          <Button onClick={() => router.push("/events/my-events")}>
+            Back to My Events
+          </Button>
+        </div>
       </div>
     );
   }
@@ -103,14 +202,14 @@ export default function CreateEventPage() {
     }
 
     try {
-      // Create event using utility function
-      await createEvent(formData);
+      // Update event using utility function
+      await updateEvent(eventId, formData);
 
-      // Redirect to events page after successful creation
-      router.push("/events");
+      // Redirect to my events page after successful update
+      router.push("/events/my-events");
     } catch (error: any) {
-      console.error("Event creation error:", error);
-      setError(error.message || "Failed to create event. Please try again.");
+      console.error("Event update error:", error);
+      setError(error.message || "Failed to update event. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -131,18 +230,14 @@ export default function CreateEventPage() {
         <div className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => router.push("/events")}
+            onClick={() => router.push("/events/my-events")}
             className="text-gray-400 hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Events
+            Back to My Events
           </Button>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Create New Event
-          </h1>
-          <p className="text-gray-400">
-            Fill in the details below to create your event
-          </p>
+          <h1 className="text-3xl font-bold text-white mb-2">Edit Event</h1>
+          <p className="text-gray-400">Update the details of your event</p>
         </div>
 
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
@@ -388,14 +483,25 @@ export default function CreateEventPage() {
                   </div>
                 )}
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full"
-                  size="lg"
-                >
-                  {isLoading ? "Creating Event..." : "Create Event"}
-                </Button>
+                <div className="space-y-3">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full"
+                    size="lg"
+                  >
+                    {isLoading ? "Updating Event..." : "Update Event"}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => router.push("/events/my-events")}
+                    className="w-full text-gray-400 hover:text-white"
+                  >
+                    Cancel
+                  </Button>
+                </div>
               </Card>
             </div>
           </div>

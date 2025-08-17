@@ -19,7 +19,7 @@ export default function Testimonials() {
       avatar: "SJ",
       rating: 5,
       comment:
-        "Amazing experience! The booking process was so smooth and the event was incredible. EventTix made everything so easy.",
+        "Amazing experience! The booking process was so smooth and the event was incredible. myEvents made everything so easy.",
       event: "Summer Music Festival",
       location: "New York",
     },
@@ -29,7 +29,7 @@ export default function Testimonials() {
       avatar: "MC",
       rating: 5,
       comment:
-        "I've used many ticketing platforms, but EventTix is by far the best. Great prices and excellent customer service.",
+        "I've used many ticketing platforms, but myEvents is by far the best. Great prices and excellent customer service.",
       event: "Tech Conference 2024",
       location: "San Francisco",
     },
@@ -49,7 +49,7 @@ export default function Testimonials() {
       avatar: "DK",
       rating: 5,
       comment:
-        "EventTix helped me discover amazing local events I never knew about. The recommendation system is spot on!",
+        "myEvents helped me discover amazing local events I never knew about. The recommendation system is spot on!",
       event: "Food Festival",
       location: "Los Angeles",
     },
@@ -83,7 +83,7 @@ export default function Testimonials() {
             What Our Customers Say
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Join millions of happy customers who trust EventTix for their event
+            Join millions of happy customers who trust myEvents for their event
             booking needs
           </p>
         </div>

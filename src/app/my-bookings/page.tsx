@@ -27,16 +27,23 @@ import {
   XCircle,
   Eye,
   X,
+  Filter,
 } from "lucide-react";
 
 export default function MyBookingsPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
+  const [filteredBookings, setFilteredBookings] = useState<BookingResponse[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingBooking, setCancellingBooking] = useState<string | null>(
     null
   );
+  const [statusFilter, setStatusFilter] = useState<
+    BookingResponse["status"] | "ALL"
+  >("ALL");
 
   useEffect(() => {
     if (!user) {
@@ -48,10 +55,18 @@ export default function MyBookingsPage() {
       try {
         setIsLoading(true);
         const userBookings = await getUserBookings();
-        setBookings(userBookings);
+        // Sort bookings by booking date in descending order (most recent first)
+        const sortedBookings = userBookings.sort(
+          (a, b) =>
+            new Date(b.bookingDate).getTime() -
+            new Date(a.bookingDate).getTime()
+        );
+        setBookings(sortedBookings);
+        setFilteredBookings(sortedBookings);
       } catch (error) {
         console.error("Failed to fetch bookings:", error);
         setBookings([]);
+        setFilteredBookings([]);
       } finally {
         setIsLoading(false);
       }
@@ -60,11 +75,27 @@ export default function MyBookingsPage() {
     fetchBookings();
   }, [user, router]);
 
+  // Filter bookings when status filter changes
+  useEffect(() => {
+    let filtered;
+    if (statusFilter === "ALL") {
+      filtered = bookings;
+    } else {
+      filtered = bookings.filter((booking) => booking.status === statusFilter);
+    }
+    // Ensure filtered results are also sorted in descending order
+    const sortedFiltered = filtered.sort(
+      (a, b) =>
+        new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime()
+    );
+    setFilteredBookings(sortedFiltered);
+  }, [bookings, statusFilter]);
+
   if (!user) {
     return null;
   }
 
-  const handleCancelBooking = async (bookingId: string) => {
+  const handleCancelBooking = async (booking: BookingResponse) => {
     if (
       !confirm(
         "Are you sure you want to cancel this booking? This action cannot be undone."
@@ -72,17 +103,17 @@ export default function MyBookingsPage() {
     ) {
       return;
     }
-
+    const bookingId = booking.id;
     setCancellingBooking(bookingId);
 
     try {
-      await cancelBooking(bookingId);
+      await cancelBooking(booking);
 
       // Update local state
       setBookings((prev) =>
         prev.map((booking) =>
           booking.id === bookingId
-            ? { ...booking, status: "cancelled" }
+            ? { ...booking, status: "CANCELLED" }
             : booking
         )
       );
@@ -97,12 +128,14 @@ export default function MyBookingsPage() {
 
   const getStatusIcon = (status: BookingResponse["status"]) => {
     switch (status) {
-      case "confirmed":
+      case "CONFIRMED":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case "pending":
+      case "PENDING":
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      case "cancelled":
+      case "CANCELLED":
         return <XCircle className="w-4 h-4 text-red-500" />;
+      case "FAILED":
+        return <XCircle className="w-4 h-4 text-red-600" />;
       default:
         return null;
     }
@@ -110,12 +143,14 @@ export default function MyBookingsPage() {
 
   const getStatusColor = (status: BookingResponse["status"]) => {
     switch (status) {
-      case "confirmed":
+      case "CONFIRMED":
         return "text-green-400";
-      case "pending":
+      case "PENDING":
         return "text-yellow-400";
-      case "cancelled":
+      case "CANCELLED":
         return "text-red-400";
+      case "FAILED":
+        return "text-red-500";
       default:
         return "text-gray-400";
     }
@@ -140,10 +175,40 @@ export default function MyBookingsPage() {
           </p>
         </div>
 
+        {/* Filter Section */}
+        <div className="mb-6">
+          <div className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
+            <Filter className="w-5 h-5 text-gray-400" />
+            <span className="text-white font-medium">Filter by Status:</span>
+            <div className="flex gap-2">
+              {(
+                ["ALL", "CONFIRMED", "PENDING", "CANCELLED", "FAILED"] as const
+              ).map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    statusFilter === status
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                >
+                  {status === "ALL"
+                    ? "All"
+                    : status.charAt(0) + status.slice(1).toLowerCase()}
+                </button>
+              ))}
+            </div>
+            <div className="ml-auto text-sm text-gray-400">
+              Showing {filteredBookings.length} of {bookings.length} bookings
+            </div>
+          </div>
+        </div>
+
         {/* Bookings List */}
-        {bookings.length > 0 ? (
+        {filteredBookings.length > 0 ? (
           <div className="space-y-6">
-            {bookings.map((booking) => {
+            {filteredBookings.map((booking) => {
               // Handle the case where event data might not be included
               const eventData = booking.event;
               const eventName = booking.eventName || eventData?.name || "Event";
@@ -151,7 +216,8 @@ export default function MyBookingsPage() {
               const totalPrice = booking.totalAmount || booking.totalPrice || 0;
 
               // Only show event status if we have event data
-              const canCancel = booking.status !== "cancelled";
+              const canCancel =
+                booking.status == "CONFIRMED" || booking.status == "PENDING";
 
               return (
                 <Card key={booking.id} className="bg-gray-900 border-gray-800">
@@ -304,7 +370,7 @@ export default function MyBookingsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleCancelBooking(booking.id)}
+                              onClick={() => handleCancelBooking(booking)}
                               disabled={cancellingBooking === booking.id}
                               className="w-full border-red-600 text-red-400 hover:bg-red-950 hover:text-red-300"
                             >
@@ -330,13 +396,33 @@ export default function MyBookingsPage() {
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <Ticket className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-medium text-gray-300 mb-2">
-                No bookings found
-              </h3>
-              <p className="mb-6">You haven't booked any events yet.</p>
-              <Link href="/events">
-                <Button>Browse Events</Button>
-              </Link>
+              {bookings.length === 0 ? (
+                <>
+                  <h3 className="text-xl font-medium text-gray-300 mb-2">
+                    No bookings found
+                  </h3>
+                  <p className="mb-6">You haven't booked any events yet.</p>
+                  <Link href="/events">
+                    <Button>Browse Events</Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-xl font-medium text-gray-300 mb-2">
+                    No bookings match the selected filter
+                  </h3>
+                  <p className="mb-6">
+                    Try selecting a different status filter or clear the filter
+                    to see all bookings.
+                  </p>
+                  <Button
+                    onClick={() => setStatusFilter("ALL")}
+                    variant="outline"
+                  >
+                    Show All Bookings
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

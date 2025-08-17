@@ -116,7 +116,7 @@ export default function SignUp() {
             className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to EventTix
+            Back to myEvents
           </Link>
         </div>
 
@@ -133,7 +133,7 @@ export default function SignUp() {
               Create Account
             </CardTitle>
             <CardDescription className="text-gray-400">
-              Join EventTix to discover amazing events
+              Join myEvents to discover amazing events
             </CardDescription>
           </CardHeader>
 

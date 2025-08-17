@@ -30,7 +30,7 @@ export interface BookingResponse {
   totalPrice?: number; // alias for totalAmount
   paymentMethod: string;
   bookingDate: string;
-  status: "confirmed" | "cancelled" | "pending";
+  status: "CONFIRMED" | "CANCELLED" | "PENDING" | "FAILED";
   ticketNumbers?: string[];
   // Event details (if included in response)
   event?: {
@@ -133,10 +133,11 @@ export async function getBookingById(
 }
 
 // Cancel a booking
-export async function cancelBooking(bookingId: string): Promise<void> {
+export async function cancelBooking(booking: BookingResponse): Promise<void> {
   try {
-    await bookingApiCall(`/bookings/cancel/${bookingId}`, {
+    await bookingApiCall(`/bookings/cancel/${booking.id}`, {
       method: "PUT",
+      body: JSON.stringify({ booking }),
     });
   } catch (error: any) {
     console.error("Failed to cancel booking:", error);

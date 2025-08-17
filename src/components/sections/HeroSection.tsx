@@ -7,10 +7,10 @@ import { Search, MapPin, Calendar } from "lucide-react";
 export default function HeroSection() {
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-purple-900 via-gray-900 to-indigo-900">
-      {/* Background overlay */}
+
       <div className="absolute inset-0 bg-black/30" />
 
-      {/* Background pattern */}
+
       <div className="absolute inset-0 opacity-10">
         <div className="h-full w-full bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
       </div>
@@ -42,7 +42,7 @@ export default function HeroSection() {
                     placeholder="Search events, artists, venues..."
                     className="pl-10 h-12 text-base bg-gray-800/50 border-gray-600"
                     onChange={() => {
-                      /* Handle search */
+                      
                     }}
                   />
                 </div>
@@ -57,7 +57,7 @@ export default function HeroSection() {
                     placeholder="Location"
                     className="pl-10 h-12 text-base bg-gray-800/50 border-gray-600"
                     onChange={() => {
-                      /* Handle location */
+                     
                     }}
                   />
                 </div>
@@ -83,7 +83,7 @@ export default function HeroSection() {
                 size="lg"
                 className="px-8 h-12 text-base font-semibold"
                 onClick={() => {
-                  /* Handle search submit */
+                  window.location.href = `/events`;
                 }}
               >
                 Find Events
@@ -91,7 +91,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Quick Stats */}
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-1">50K+</div>

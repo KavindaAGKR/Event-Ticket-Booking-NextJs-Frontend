@@ -105,7 +105,7 @@ export default function About() {
             About
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               {" "}
-              EventTix
+              myEvents
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -157,7 +157,7 @@ export default function About() {
                 make sure you never miss yours."
               </blockquote>
               <cite className="text-purple-400 mt-4 block">
-                - EventTix Team
+                - myEvents Team
               </cite>
             </div>
           </div>
@@ -202,41 +202,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Meet Our Team</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              The passionate individuals working to revolutionize how you
-              discover and attend events
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <Card
-                key={index}
-                className="bg-gray-800/30 border-gray-700 hover:bg-gray-800/50 transition-all duration-300"
-              >
-                <CardHeader className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl font-bold">
-                    {member.avatar}
-                  </div>
-                  <CardTitle className="text-white">{member.name}</CardTitle>
-                  <p className="text-purple-400 font-medium">{member.role}</p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-300 text-sm leading-relaxed text-center">
-                    {member.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Story Section */}
       <section className="py-16 bg-gray-900">
         <div className="container mx-auto px-4">
@@ -250,7 +215,7 @@ export default function About() {
                     The Beginning (2015)
                   </h3>
                   <p className="text-gray-300 leading-relaxed">
-                    EventTix was born from a simple frustration: finding and
+                    myEvents was born from a simple frustration: finding and
                     booking great events was unnecessarily complicated. Our
                     founders, Sarah and Michael, experienced this firsthand
                     while trying to discover local concerts and festivals. They
@@ -282,7 +247,7 @@ export default function About() {
                     Innovation & Future (2021-Present)
                   </h3>
                   <p className="text-gray-300 leading-relaxed">
-                    Today, EventTix is at the forefront of event technology.
+                    Today, myEvents is at the forefront of event technology.
                     We're continuously innovating with AI-powered
                     recommendations, virtual event experiences, and seamless
                     integration with social platforms. Our mission remains the

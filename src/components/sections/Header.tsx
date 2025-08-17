@@ -21,26 +21,48 @@ export default function Header() {
           </Link>
         </div>
 
+        {/* Search Bar */}
+        <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search events, artists, venues..."
+              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              onFocus={() => {}}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                  window.location.href = `/events?search=${encodeURIComponent(
+                    e.currentTarget.value.trim()
+                  )}`;
+                }
+              }}
+            />
+          </div>
+        </div>
+
         {/* Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
+          <Link
+            href="/"
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            Home
+          </Link>
           <Link
             href="/events"
             className="text-gray-300 hover:text-white transition-colors"
           >
             Events
           </Link>
-          <Link
-            href="/categories"
-            className="text-gray-300 hover:text-white transition-colors"
-          >
-            Categories
-          </Link>
-          <Link
-            href="/venues"
-            className="text-gray-300 hover:text-white transition-colors"
-          >
-            Venues
-          </Link>
+          {user?.role?.includes("organizer") && (
+            <Link
+              href="/events/my-events"
+              className="text-gray-300 hover:text-white transition-colors font-medium"
+            >
+              My Events
+            </Link>
+          )}
           {user && (
             <Link
               href="/my-bookings"
@@ -57,21 +79,6 @@ export default function Header() {
             About
           </Link>
         </nav>
-
-        {/* Search Bar */}
-        <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search events, artists, venues..."
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              onFocus={() => {
-                /* Handle search focus */
-              }}
-            />
-          </div>
-        </div>
 
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
@@ -98,26 +105,23 @@ export default function Header() {
 
               {/* User Info - Desktop */}
               <Link
-                href="/dashboard"
+                href="/profile"
                 className="hidden md:flex items-center space-x-2"
+                title="My Profile"
               >
-                <div className="hidden md:flex items-center space-x-3 px-3 py-1 rounded-full bg-gray-800 border border-gray-700">
+                <div className="hidden md:flex items-center space-x-3 px-3 py-1 rounded-full bg-gray-800 border border-gray-700 hover:border-purple-500 transition-colors">
                   <div className="h-7 w-7 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
                     <User className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-gray-300 text-sm">{user.name}</span>
-                  {/* <button
-                  onClick={() => logout()}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button> */}
+                  <span className="text-gray-300 text-sm">
+                    {user.name || "Profile"}
+                  </span>
                 </div>
               </Link>
 
               {/* Mobile User Menu */}
               <div className="md:hidden flex items-center space-x-2">
-                <Link href="/dashboard">
+                <Link href="/profile" title="My Profile">
                   <Button variant="ghost" size="icon">
                     <User className="h-5 w-5 text-gray-300" />
                   </Button>

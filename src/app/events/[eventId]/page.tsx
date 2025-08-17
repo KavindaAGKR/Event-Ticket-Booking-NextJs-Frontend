@@ -12,6 +12,7 @@ import {
   formatPrice,
   getEventStatus,
   getEventById,
+  deleteEvent,
 } from "@/lib/events";
 import {
   ArrowLeft,
@@ -25,6 +26,8 @@ import {
   Ticket,
   Mail,
   Globe,
+  Edit,
+  Trash2,
 } from "lucide-react";
 
 export default function EventDetailsPage() {
@@ -35,6 +38,8 @@ export default function EventDetailsPage() {
   const [ticketCount, setTicketCount] = useState(1);
   const [isLiked, setIsLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -94,18 +99,32 @@ export default function EventDetailsPage() {
     router.push(bookingUrl);
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: event.name,
-        text: event.description,
-        url: window.location.href,
-      });
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert("Event link copied to clipboard!");
+  const handleEditEvent = () => {
+    router.push(`/events/edit/${event!.id}`);
+  };
+
+  const handleDeleteEvent = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDeleteEvent = async () => {
+    if (!event) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteEvent(event.id!);
+      // Redirect to my events page after successful deletion
+      router.push("/events/my-events");
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+      // You can add a toast notification here for better UX
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const cancelDeleteEvent = () => {
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -134,26 +153,39 @@ export default function EventDetailsPage() {
         {/* Event Title Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-4 justify-between">
               <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                 {event.category}
               </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsLiked(!isLiked)}
-                className={isLiked ? "text-red-500" : "text-gray-400"}
-              >
-                <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleShare}
-                className="text-gray-400 hover:text-white"
-              >
-                <Share2 className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                {/* Edit and Delete buttons - Only show for event organizer or admin */}
+                {user &&
+                  (user.email === event.organizerEmail ||
+                    user.role?.includes("admin")) && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="lg"
+                        onClick={handleEditEvent}
+                        className="text-blue-400 hover:text-blue-300 text-lg"
+                        title="Edit Event"
+                      >
+                        <a>Edit&nbsp;</a>
+                        <Edit className="w-5 h-5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="lg"
+                        onClick={handleDeleteEvent}
+                        className="text-red-400 hover:text-red-300 text-lg"
+                        title="Delete Event"
+                      >
+                        <a>Delete&nbsp;</a>
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </>
+                  )}
+              </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               {event.name}
@@ -270,6 +302,7 @@ export default function EventDetailsPage() {
                 </label>
                 <div className="flex items-center gap-3">
                   <Button
+                    disabled={user?.email === event.organizerEmail}
                     variant="outline"
                     size="icon"
                     onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
@@ -281,6 +314,7 @@ export default function EventDetailsPage() {
                     {ticketCount}
                   </span>
                   <Button
+                    disabled={user?.email === event.organizerEmail}
                     variant="outline"
                     size="icon"
                     onClick={() => setTicketCount(ticketCount + 1)}
@@ -305,6 +339,7 @@ export default function EventDetailsPage() {
               <Button
                 onClick={handleBookTickets}
                 className="w-full mb-4"
+                disabled={user?.email === event.organizerEmail}
                 size="lg"
               >
                 <Ticket className="w-4 h-4 mr-2" />
@@ -318,6 +353,39 @@ export default function EventDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-800">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Delete Event
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete "{event?.name}"? This action
+              cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="ghost"
+                onClick={cancelDeleteEvent}
+                disabled={isDeleting}
+                className="text-gray-400 hover:text-white"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteEvent}
+                disabled={isDeleting}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {isDeleting ? "Deleting..." : "Delete Event"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
