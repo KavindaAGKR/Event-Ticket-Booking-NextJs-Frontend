@@ -22,7 +22,6 @@ interface UploadResult {
 export class ImageUploadService {
   static async uploadImage(file: File): Promise<UploadResult> {
     try {
-      // Validate file type
       const allowedTypes = [
         "image/jpeg",
         "image/png",
@@ -35,8 +34,6 @@ export class ImageUploadService {
           error: "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
         };
       }
-
-      // Validate file size
       if (file.size > MAX_FILE_SIZE) {
         return {
           success: false,
@@ -44,14 +41,12 @@ export class ImageUploadService {
         };
       }
 
-      // Generate unique filename
+
       const fileExtension = file.name.split(".").pop();
       const fileName = `events/${uuidv4()}.${fileExtension}`;
 
-      // Convert file to buffer
       const buffer = Buffer.from(await file.arrayBuffer());
 
-      // Upload to S3
       const uploadCommand = new PutObjectCommand({
         Bucket: BUCKET_NAME,
         Key: fileName,
@@ -62,7 +57,6 @@ export class ImageUploadService {
 
       await s3Client.send(uploadCommand);
 
-      // Generate the public URL
       const imageUrl = `https://${BUCKET_NAME}.s3.${
         process.env.AWS_REGION || "ap-southeast-1"
       }.amazonaws.com/${fileName}`;

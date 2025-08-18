@@ -64,7 +64,6 @@ export function Dialog({
         ref={dialogRef}
         className={`bg-gray-900 border border-gray-800 rounded-lg shadow-xl ${sizeClasses[size]} w-full mx-4 transform transition-all`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <div>
             <h2 className="text-xl font-semibold text-white">{title}</h2>
@@ -79,8 +78,6 @@ export function Dialog({
             <X className="w-6 h-6" />
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-6">{children}</div>
       </div>
     </div>

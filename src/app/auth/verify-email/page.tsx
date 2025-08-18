@@ -13,7 +13,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Mail, Shield, RefreshCw } from "lucide-react";
-import { verifyEmail, resendVerificationCode } from "@/lib/auth/cognito";
+import {
+  verifyEmail,
+  resendVerificationCode,
+} from "@/services/auth/authServices";
 
 export default function VerifyEmail() {
   const router = useRouter();
@@ -70,7 +73,6 @@ export default function VerifyEmail() {
 
       if (result.success) {
         setSuccess(result.message);
-        // Redirect to sign in page after a short delay
         setTimeout(() => {
           router.push("/auth/signin?verified=true");
         }, 2000);
@@ -96,7 +98,7 @@ export default function VerifyEmail() {
 
       if (result.success) {
         setSuccess("Verification code sent to your email");
-        setCountdown(60); // 60 second countdown
+        setCountdown(60); // 60 sec
       } else {
         setError(result.message);
       }
@@ -113,12 +115,10 @@ export default function VerifyEmail() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Back to sign up link */}
         <div className="mb-6">
           <Link
             href="/auth/signup"
@@ -155,7 +155,6 @@ export default function VerifyEmail() {
 
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email Field (if not pre-filled) */}
               {!email && (
                 <div className="space-y-2">
                   <label
@@ -178,8 +177,6 @@ export default function VerifyEmail() {
                   </div>
                 </div>
               )}
-
-              {/* Verification Code Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="verificationCode"
@@ -204,8 +201,6 @@ export default function VerifyEmail() {
                   Enter the 6-digit code sent to your email
                 </p>
               </div>
-
-              {/* Success Message */}
               {success && (
                 <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
                   <p className="text-green-400 text-sm text-center">
@@ -213,15 +208,12 @@ export default function VerifyEmail() {
                   </p>
                 </div>
               )}
-
-              {/* Error Message */}
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
                   <p className="text-red-400 text-sm text-center">{error}</p>
                 </div>
               )}
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white"
@@ -259,7 +251,6 @@ export default function VerifyEmail() {
               </p>
             </div>
 
-            {/* Sign In Link */}
             <div className="text-center pt-4 border-t border-gray-600">
               <p className="text-gray-400 text-sm">
                 Already verified?{" "}

@@ -7,7 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { getCurrentUser, isAuthenticated, signOutUser } from "./cognito";
+import { getCurrentUser, isAuthenticated, signOutUser } from "./authServices";
 
 interface User {
   id: string;
@@ -28,12 +28,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing authentication on mount
   useEffect(() => {
     checkAuth();
   }, []);
@@ -65,7 +63,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
-      // Still clear local state even if API call fails
       setUser(null);
       if (typeof window !== "undefined") {
         localStorage.removeItem("authToken");
@@ -82,7 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Refresh user failed:", error);
-      // If refresh fails, user might need to re-authenticate
       setUser(null);
     }
   };
@@ -107,13 +103,11 @@ export function useAuth() {
   return context;
 }
 
-// Hook for protected routes
 export function useRequireAuth() {
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !user) {
-      // Redirect to login if not authenticated
       window.location.href = "/auth/signin";
     }
   }, [user, isLoading]);

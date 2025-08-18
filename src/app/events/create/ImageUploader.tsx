@@ -33,7 +33,6 @@ export default function ImageUploader({
     setError("");
     setUploadProgress(0);
 
-    // Simulate progress for better UX
     const progressInterval = setInterval(() => {
       setUploadProgress((prev) => Math.min(prev + 10, 90));
     }, 200);
@@ -46,7 +45,6 @@ export default function ImageUploader({
 
       if (result.success && result.imageUrl) {
         onImageUpload(result.imageUrl);
-        // Clear file input
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -71,7 +69,6 @@ export default function ImageUploader({
 
   return (
     <div className="space-y-4">
-      {/* File Upload Section */}
       <div className="space-y-3">
         <input
           ref={fileInputRef}
@@ -108,7 +105,6 @@ export default function ImageUploader({
         )}
       </div>
 
-      {/* Image Preview */}
       {imageUrl && (
         <div className="relative border border-gray-700 rounded-lg overflow-hidden">
           <img

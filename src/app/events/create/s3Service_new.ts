@@ -9,7 +9,6 @@ interface UploadResult {
 
 export const uploadImageToS3 = async (file: File): Promise<UploadResult> => {
   try {
-    // Check if environment variables are available
     const region = process.env.NEXT_PUBLIC_AWS_REGION || "ap-southeast-1";
     const accessKeyId = process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID;
     const secretAccessKey = process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY;
@@ -27,7 +26,6 @@ export const uploadImageToS3 = async (file: File): Promise<UploadResult> => {
       };
     }
 
-    // Create S3 client with validated credentials
     const s3Client = new S3Client({
       region,
       credentials: {
@@ -36,7 +34,6 @@ export const uploadImageToS3 = async (file: File): Promise<UploadResult> => {
       },
     });
 
-    // Validate file
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
       return {
@@ -53,14 +50,11 @@ export const uploadImageToS3 = async (file: File): Promise<UploadResult> => {
       };
     }
 
-    // Generate unique filename
     const fileExtension = file.name.split(".").pop();
     const fileName = `events/${uuidv4()}.${fileExtension}`;
 
-    // Convert file to buffer
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Upload to S3
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: fileName,
@@ -71,7 +65,6 @@ export const uploadImageToS3 = async (file: File): Promise<UploadResult> => {
 
     await s3Client.send(command);
 
-    // Generate public URL
     const imageUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
 
     return { success: true, imageUrl };

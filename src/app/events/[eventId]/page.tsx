@@ -4,28 +4,23 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { useAuth } from "@/services/auth/AuthProvider";
 import {
   Event,
   formatDate,
   formatTime,
   formatPrice,
-  getEventStatus,
   getEventById,
   deleteEvent,
-} from "@/lib/events";
+} from "@/services/eventsServices";
 import {
   ArrowLeft,
   Calendar,
   MapPin,
   Users,
-  DollarSign,
   Clock,
-  Share2,
-  Heart,
   Ticket,
   Mail,
-  Globe,
   Edit,
   Trash2,
 } from "lucide-react";
@@ -94,7 +89,6 @@ export default function EventDetailsPage() {
       return;
     }
 
-    // Redirect to booking page with event details
     const bookingUrl = `/booking?eventId=${event.id}&quantity=${ticketCount}`;
     router.push(bookingUrl);
   };
@@ -113,11 +107,9 @@ export default function EventDetailsPage() {
     setIsDeleting(true);
     try {
       await deleteEvent(event.id!);
-      // Redirect to my events page after successful deletion
       router.push("/events/my-events");
     } catch (error) {
       console.error("Failed to delete event:", error);
-      // You can add a toast notification here for better UX
     } finally {
       setIsDeleting(false);
     }
@@ -129,7 +121,6 @@ export default function EventDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-950">
-      {/* Back Button */}
       <div className="container mx-auto px-4 py-6">
         <Button
           variant="ghost"
@@ -141,7 +132,6 @@ export default function EventDetailsPage() {
         </Button>
       </div>
 
-      {/* Event Hero Section */}
       <div className="relative h-96 overflow-hidden">
         <img
           src={event.imageUrl}
@@ -150,7 +140,6 @@ export default function EventDetailsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/50 to-transparent" />
 
-        {/* Event Title Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
             <div className="flex items-center gap-4 mb-4 justify-between">
@@ -158,7 +147,6 @@ export default function EventDetailsPage() {
                 {event.category}
               </span>
               <div className="flex items-center gap-2">
-                {/* Edit and Delete buttons - Only show for event organizer or admin */}
                 {user &&
                   (user.email === event.organizerEmail ||
                     user.role?.includes("admin")) && (
@@ -213,10 +201,8 @@ export default function EventDetailsPage() {
         </div>
       </div>
 
-      {/* Event Details */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Main Content */}
           <div className="lg:col-span-2">
             <Card className="bg-gray-900 border-gray-800 p-8 mb-8">
               <h2 className="text-2xl font-bold text-white mb-6">
@@ -226,8 +212,6 @@ export default function EventDetailsPage() {
                 {event.description}
               </p>
             </Card>
-
-            {/* Event Details */}
             <Card className="bg-gray-900 border-gray-800 p-8">
               <h3 className="text-xl font-bold text-white mb-6">
                 Event Details
@@ -272,8 +256,6 @@ export default function EventDetailsPage() {
               </div>
             </Card>
           </div>
-
-          {/* Booking Sidebar */}
           <div className="lg:col-span-1">
             <Card className="bg-gray-900 border-gray-800 p-8 sticky top-8">
               <div className="text-center mb-6">
@@ -295,7 +277,6 @@ export default function EventDetailsPage() {
                 </div>
               </div>
 
-              {/* Ticket Quantity */}
               <div className="mb-6">
                 <label className="block text-white font-medium mb-2">
                   Quantity
@@ -324,8 +305,6 @@ export default function EventDetailsPage() {
                   </Button>
                 </div>
               </div>
-
-              {/* Total Price */}
               <div className="border-t border-gray-800 pt-4 mb-6">
                 <div className="flex items-center justify-between text-lg">
                   <span className="text-gray-400">Total</span>
@@ -334,8 +313,6 @@ export default function EventDetailsPage() {
                   </span>
                 </div>
               </div>
-
-              {/* Book Button */}
               <Button
                 onClick={handleBookTickets}
                 className="w-full mb-4"
@@ -353,8 +330,6 @@ export default function EventDetailsPage() {
           </div>
         </div>
       </div>
-
-      {/* Delete Confirmation Modal */}
       {deleteModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-800">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { useAuth } from "@/services/auth/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import { updateUserDetails } from "@/lib/auth/cognito";
+import { updateUserDetails } from "@/services/auth/authServices";
 
 export default function ProfilePage() {
   const { user, logout, refreshUser, isLoading: authLoading } = useAuth();
@@ -29,14 +29,12 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Form state for editing profile
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
   });
 
   useEffect(() => {
-    // Only redirect if auth loading is complete and user is not authenticated
     if (!authLoading && !user) {
       router.push("/auth/signin");
     } else if (user) {
@@ -47,7 +45,6 @@ export default function ProfilePage() {
     }
   }, [user, router, authLoading]);
 
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -56,7 +53,6 @@ export default function ProfilePage() {
     );
   }
 
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -82,7 +78,6 @@ export default function ProfilePage() {
       success("Profile Updated", "Your profile has been updated successfully!");
       setIsEditing(false);
 
-      // Refresh user data
       await refreshUser();
     } catch (err: any) {
       error("Update Failed", err.message || "Failed to update profile");
@@ -116,7 +111,6 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
           <p className="text-gray-400">
@@ -125,11 +119,9 @@ export default function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Overview Card */}
           <div className="lg:col-span-1">
             <Card className="p-6 bg-gray-900 border-gray-800">
               <div className="text-center">
-                {/* Profile Avatar */}
                 <div className="relative mx-auto w-24 h-24 mb-4">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
                     <span className="text-white text-2xl font-bold">
@@ -140,8 +132,6 @@ export default function ProfilePage() {
                     <Camera className="h-4 w-4 text-white" />
                   </button>
                 </div>
-
-                {/* User Info */}
                 <h2 className="text-xl font-semibold text-white mb-1">
                   {user.name || "User"}
                 </h2>
@@ -154,8 +144,6 @@ export default function ProfilePage() {
                     {getRoleDisplay(user.role)}
                   </span>
                 </div>
-
-                {/* Account Status */}
                 <div className="flex items-center justify-center gap-2 mb-6">
                   {user.isVerified ? (
                     <>
@@ -173,8 +161,6 @@ export default function ProfilePage() {
                     </>
                   )}
                 </div>
-
-                {/* Quick Actions */}
                 <div className="space-y-2">
                   <Button
                     variant="outline"
@@ -197,10 +183,7 @@ export default function ProfilePage() {
               </div>
             </Card>
           </div>
-
-          {/* Profile Details and Settings */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Personal Information */}
             <Card className="p-6 bg-gray-900 border-gray-800">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-white">
@@ -219,7 +202,6 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-4">
-                {/* Name Field */}
                 <div>
                   <label className="block text-white font-medium mb-2">
                     <User className="h-4 w-4 inline mr-2" />
@@ -240,8 +222,6 @@ export default function ProfilePage() {
                     </p>
                   )}
                 </div>
-
-                {/* Email Field */}
                 <div>
                   <label className="block text-white font-medium mb-2">
                     <Mail className="h-4 w-4 inline mr-2" />
@@ -255,7 +235,7 @@ export default function ProfilePage() {
                       onChange={handleInputChange}
                       placeholder="Enter your email"
                       className="bg-gray-800 border-gray-700 text-white"
-                      disabled // Email changes might require verification
+                      disabled
                     />
                   ) : (
                     <p className="text-gray-300 p-3 bg-gray-800 rounded-md">
@@ -269,8 +249,6 @@ export default function ProfilePage() {
                     </p>
                   )}
                 </div>
-
-                {/* Save/Cancel Buttons */}
                 {isEditing && (
                   <div className="flex gap-3 pt-4">
                     <Button
@@ -295,14 +273,12 @@ export default function ProfilePage() {
               </div>
             </Card>
 
-            {/* Account Settings */}
             <Card className="p-6 bg-gray-900 border-gray-800">
               <h3 className="text-xl font-semibold text-white mb-6">
                 Account Settings
               </h3>
 
               <div className="space-y-4">
-                {/* Account Type */}
                 <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
                   <div>
                     <h4 className="font-medium text-white">Account Type</h4>
@@ -318,8 +294,6 @@ export default function ProfilePage() {
                     {getRoleDisplay(user.role)}
                   </span>
                 </div>
-
-                {/* Email Verification */}
                 <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
                   <div>
                     <h4 className="font-medium text-white">
@@ -346,8 +320,6 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
-
-                {/* Password */}
                 <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
                   <div>
                     <h4 className="font-medium text-white">Password</h4>
@@ -362,8 +334,6 @@ export default function ProfilePage() {
                 </div>
               </div>
             </Card>
-
-            {/* Quick Navigation */}
             <Card className="p-6 bg-gray-900 border-gray-800">
               <h3 className="text-xl font-semibold text-white mb-6">
                 Quick Actions

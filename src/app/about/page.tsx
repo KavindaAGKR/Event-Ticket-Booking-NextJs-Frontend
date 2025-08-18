@@ -97,7 +97,6 @@ export default function About() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-purple-900 via-gray-900 to-indigo-900">
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 container mx-auto px-4 text-center">
@@ -116,7 +115,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-16 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -140,7 +138,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Mission Section */}
       <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -164,7 +161,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values Section */}
       <section className="py-16 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -202,7 +198,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Story Section */}
       <section className="py-16 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -261,7 +256,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -272,22 +266,14 @@ export default function About() {
             incredible experiences again.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="px-8"
-              onClick={() => {
-                /* Handle browse events */
-              }}
-            >
+            <Button size="lg" className="px-8" onClick={() => {}}>
               Browse Events
             </Button>
             <Button
               variant="outline"
               size="lg"
               className="px-8"
-              onClick={() => {
-                /* Handle contact */
-              }}
+              onClick={() => {}}
             >
               Contact Us
             </Button>

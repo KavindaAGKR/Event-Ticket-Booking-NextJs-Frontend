@@ -5,8 +5,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth/AuthProvider";
-import { CreateEventData, EVENT_CATEGORIES, createEvent } from "@/lib/events";
+import { useAuth } from "@/services/auth/AuthProvider";
+import {
+  CreateEventData,
+  EVENT_CATEGORIES,
+  createEvent,
+} from "@/services/eventsServices";
 import ImageUploader from "./ImageUploader";
 import {
   ArrowLeft,
@@ -37,14 +41,12 @@ export default function CreateEventPage() {
     organizerEmail: user?.email || "",
   });
 
-  // Handle authentication redirect
   useEffect(() => {
     if (!authLoading && !user) {
       router.push("/auth/signin");
     }
   }, [user, router, authLoading]);
 
-  // Update form data when user loads
   useEffect(() => {
     if (user) {
       setFormData((prev) => ({
@@ -55,7 +57,6 @@ export default function CreateEventPage() {
     }
   }, [user]);
 
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -64,7 +65,6 @@ export default function CreateEventPage() {
     );
   }
 
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -89,10 +89,6 @@ export default function CreateEventPage() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
-    console.log("Form data before submission:", formData);
-
-    // Basic validation
     if (
       !formData.name ||
       !formData.description ||
@@ -103,33 +99,25 @@ export default function CreateEventPage() {
       setIsLoading(false);
       return;
     }
-
     if (!formData.startDateTime || !formData.endDateTime) {
       setError("Please select start and end date/time.");
       setIsLoading(false);
       return;
     }
-
     if (new Date(formData.startDateTime) >= new Date(formData.endDateTime)) {
       setError("End date must be after start date.");
       setIsLoading(false);
       return;
     }
-
     if (formData.ticketPrice < 0 || formData.totalTickets <= 0) {
       setError("Please enter valid ticket price and quantity.");
       setIsLoading(false);
       return;
     }
-
     try {
-      // Create event using utility function
       await createEvent(formData);
-
-      // Redirect to events page after successful creation
       router.push("/events");
     } catch (error: any) {
-      console.error("Event creation error:", error);
       setError(error.message || "Failed to create event. Please try again.");
     } finally {
       setIsLoading(false);
@@ -147,7 +135,6 @@ export default function CreateEventPage() {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <Button
             variant="ghost"
@@ -164,17 +151,13 @@ export default function CreateEventPage() {
             Fill in the details below to create your event
           </p>
         </div>
-
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Basic Information */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6">
                   Basic Information
                 </h2>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -190,7 +173,6 @@ export default function CreateEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Description *
@@ -205,7 +187,6 @@ export default function CreateEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Category *
@@ -226,14 +207,11 @@ export default function CreateEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Location & Venue */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <MapPin className="w-5 h-5 mr-2" />
                   Location & Venue
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -249,7 +227,6 @@ export default function CreateEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       City, Country *
@@ -266,14 +243,11 @@ export default function CreateEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Date & Time */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <Calendar className="w-5 h-5 mr-2" />
                   Date & Time
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -288,7 +262,6 @@ export default function CreateEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       End Date & Time *
@@ -304,14 +277,11 @@ export default function CreateEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Ticketing */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <DollarSign className="w-5 h-5 mr-2" />
                   Ticketing
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -329,7 +299,6 @@ export default function CreateEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Total Tickets Available *
@@ -348,29 +317,22 @@ export default function CreateEventPage() {
                 </div>
               </Card>
             </div>
-
-            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              {/* Event Image */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <ImageIcon className="w-5 h-5 mr-2" />
                   Event Image
                 </h2>
-
                 <ImageUploader
                   imageUrl={formData.imageUrl}
                   onImageUpload={handleImageUpload}
                   onImageRemove={handleImageRemove}
                 />
               </Card>
-
-              {/* Organizer Info */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6">
                   Organizer Information
                 </h2>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -384,7 +346,6 @@ export default function CreateEventPage() {
                       className="bg-gray-800 border-gray-700 text-white"
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Contact Email
@@ -399,15 +360,12 @@ export default function CreateEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Submit Button */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 {error && (
                   <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-md">
                     <p className="text-red-300 text-sm">{error}</p>
                   </div>
                 )}
-
                 <Button
                   type="submit"
                   disabled={isLoading}

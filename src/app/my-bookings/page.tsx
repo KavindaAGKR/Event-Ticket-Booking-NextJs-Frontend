@@ -7,13 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
-import { useAuth } from "@/lib/auth/AuthProvider";
-import {
-  formatDate,
-  formatTime,
-  formatPrice,
-  getEventStatus,
-} from "@/lib/events";
+import { useAuth } from "@/services/auth/AuthProvider";
+import { formatDate, formatTime, formatPrice } from "@/services/eventsServices";
 import {
   getUserBookings,
   cancelBooking,
@@ -57,14 +52,13 @@ export default function MyBookingsPage() {
     }
 
     if (!user) {
-      return; // Wait for user to be loaded
+      return;
     }
 
     const fetchBookings = async () => {
       try {
         setIsLoading(true);
         const userBookings = await getUserBookings();
-        // Sort bookings by booking date in descending order (most recent first)
         const sortedBookings = userBookings.sort(
           (a, b) =>
             new Date(b.bookingDate).getTime() -
@@ -84,7 +78,6 @@ export default function MyBookingsPage() {
     fetchBookings();
   }, [user, router, authLoading]);
 
-  // Filter bookings when status filter changes
   useEffect(() => {
     let filtered;
     if (statusFilter === "ALL") {
@@ -92,7 +85,6 @@ export default function MyBookingsPage() {
     } else {
       filtered = bookings.filter((booking) => booking.status === statusFilter);
     }
-    // Ensure filtered results are also sorted in descending order
     const sortedFiltered = filtered.sort(
       (a, b) =>
         new Date(b.bookingDate).getTime() - new Date(a.bookingDate).getTime()
@@ -100,7 +92,6 @@ export default function MyBookingsPage() {
     setFilteredBookings(sortedFiltered);
   }, [bookings, statusFilter]);
 
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -109,7 +100,6 @@ export default function MyBookingsPage() {
     );
   }
 
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -131,7 +121,6 @@ export default function MyBookingsPage() {
     try {
       await cancelBooking(bookingToCancel);
 
-      // Update local state
       setBookings((prev) =>
         prev.map((booking) =>
           booking.id === bookingId
@@ -196,7 +185,6 @@ export default function MyBookingsPage() {
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">My Bookings</h1>
           <p className="text-gray-400">
@@ -204,7 +192,6 @@ export default function MyBookingsPage() {
           </p>
         </div>
 
-        {/* Filter Section */}
         <div className="mb-6">
           <div className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg border border-gray-800">
             <Filter className="w-5 h-5 text-gray-400" />
@@ -234,17 +221,14 @@ export default function MyBookingsPage() {
           </div>
         </div>
 
-        {/* Bookings List */}
         {filteredBookings.length > 0 ? (
           <div className="space-y-6">
             {filteredBookings.map((booking) => {
-              // Handle the case where event data might not be included
               const eventData = booking.event;
               const eventName = booking.eventName || eventData?.name || "Event";
               const quantity = booking.numberOfTickets || booking.quantity || 1;
               const totalPrice = booking.totalAmount || booking.totalPrice || 0;
 
-              // Only show event status if we have event data
               const canCancel =
                 booking.status == "CONFIRMED" || booking.status == "PENDING";
 
@@ -252,10 +236,8 @@ export default function MyBookingsPage() {
                 <Card key={booking.id} className="bg-gray-900 border-gray-800">
                   <div className="p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                      {/* Event Info */}
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-4">
-                          {/* Event Image */}
                           {eventData?.imageUrl && (
                             <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                               <img
@@ -266,7 +248,6 @@ export default function MyBookingsPage() {
                             </div>
                           )}
 
-                          {/* Event Details */}
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="text-lg font-semibold text-white">
@@ -306,7 +287,6 @@ export default function MyBookingsPage() {
                           </div>
                         </div>
 
-                        {/* Booking Details */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-800 rounded-lg">
                           <div>
                             <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">
@@ -345,7 +325,6 @@ export default function MyBookingsPage() {
                           </div>
                         </div>
 
-                        {/* Ticket Numbers */}
                         {booking.ticketNumbers &&
                           booking.ticketNumbers.length > 0 && (
                             <div className="mt-4">
@@ -368,9 +347,7 @@ export default function MyBookingsPage() {
                           )}
                       </div>
 
-                      {/* Status and Actions */}
                       <div className="flex flex-col items-center gap-4 min-w-[200px]">
-                        {/* Status */}
                         <div className="flex items-center gap-2">
                           {getStatusIcon(booking.status)}
                           <span
@@ -382,7 +359,6 @@ export default function MyBookingsPage() {
                           </span>
                         </div>
 
-                        {/* Actions */}
                         <div className="flex flex-col gap-2 w-full">
                           <Link href={`/events/${booking.eventId}`}>
                             <Button
@@ -457,7 +433,6 @@ export default function MyBookingsPage() {
         )}
       </div>
 
-      {/* Cancel Booking Confirmation Dialog */}
       <ConfirmDialog
         isOpen={!!bookingToCancel}
         onClose={() => setBookingToCancel(null)}

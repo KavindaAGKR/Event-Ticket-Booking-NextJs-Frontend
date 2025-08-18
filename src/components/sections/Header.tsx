@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, User, ShoppingCart, LogOut } from "lucide-react";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { Search,  User, ShoppingCart,  } from "lucide-react";
+import { useAuth } from "@/services/auth/AuthProvider";
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user} = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-900/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
@@ -21,7 +20,6 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Search Bar */}
         <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -41,7 +39,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link
             href="/"
@@ -80,7 +77,6 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Right side actions */}
         <div className="flex items-center space-x-4">
           <Button variant="ghost" size="icon" className="lg:hidden">
             <Search className="h-5 w-5" />
@@ -92,7 +88,6 @@ export default function Header() {
 
           {user ? (
             <div className="flex items-center space-x-4">
-              {/* Mobile My Bookings Link */}
               <Link href="/my-bookings" className="md:hidden">
                 <Button
                   variant="ghost"
@@ -103,7 +98,6 @@ export default function Header() {
                 </Button>
               </Link>
 
-              {/* User Info - Desktop */}
               <Link
                 href="/profile"
                 className="hidden md:flex items-center space-x-2"
@@ -119,7 +113,6 @@ export default function Header() {
                 </div>
               </Link>
 
-              {/* Mobile User Menu */}
               <div className="md:hidden flex items-center space-x-2">
                 <Link href="/profile" title="My Profile">
                   <Button variant="ghost" size="icon">
@@ -130,7 +123,6 @@ export default function Header() {
             </div>
           ) : (
             <div className="flex items-center space-x-2">
-              {/* Desktop Sign In/Up */}
               <div className="hidden md:flex items-center space-x-2">
                 <Link href="/auth/signin">
                   <Button variant="outline" size="sm">
@@ -142,7 +134,6 @@ export default function Header() {
                 </Link>
               </div>
 
-              {/* Mobile Sign In */}
               <div className="md:hidden">
                 <Link href="/auth/signin">
                   <Button variant="outline" size="sm">
@@ -152,8 +143,6 @@ export default function Header() {
               </div>
             </div>
           )}
-
-          {/* Remove the standalone mobile menu button since we have mobile controls above */}
         </div>
       </div>
     </header>

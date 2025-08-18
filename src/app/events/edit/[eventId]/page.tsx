@@ -5,14 +5,14 @@ import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { useAuth } from "@/services/auth/AuthProvider";
 import {
   Event,
   CreateEventData,
   EVENT_CATEGORIES,
   updateEvent,
   getEventById,
-} from "@/lib/events";
+} from "@/services/eventsServices";
 import ImageUploader from "../../create/ImageUploader";
 import {
   ArrowLeft,
@@ -48,7 +48,6 @@ export default function EditEventPage() {
     organizerEmail: user?.email || "",
   });
 
-  // Fetch event data on component mount
   useEffect(() => {
     const fetchEvent = async () => {
       if (!eventId) return;
@@ -62,7 +61,6 @@ export default function EditEventPage() {
           return;
         }
 
-        // Check if user is authorized to edit this event
         if (
           user?.email !== event.organizerEmail &&
           !user?.role?.includes("admin")
@@ -73,10 +71,8 @@ export default function EditEventPage() {
 
         setOriginalEvent(event);
 
-        // Convert the dates to the format expected by datetime-local input
         const formatDateTimeForInput = (dateTimeString: string) => {
           const date = new Date(dateTimeString);
-          // Format to YYYY-MM-DDTHH:MM format
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, "0");
           const day = String(date.getDate()).padStart(2, "0");
@@ -100,7 +96,6 @@ export default function EditEventPage() {
           organizerEmail: event.organizerEmail,
         });
       } catch (error: any) {
-        console.error("Failed to fetch event:", error);
         setError(error.message || "Failed to load event");
       } finally {
         setIsLoadingEvent(false);
@@ -112,14 +107,12 @@ export default function EditEventPage() {
     }
   }, [eventId, user, authLoading]);
 
-  // Handle authentication redirect
   useEffect(() => {
     if (!authLoading && !user) {
       router.push("/auth/signin");
     }
   }, [user, router, authLoading]);
 
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -128,7 +121,6 @@ export default function EditEventPage() {
     );
   }
 
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -137,7 +129,6 @@ export default function EditEventPage() {
     );
   }
 
-  // Show loading while fetching event
   if (isLoadingEvent) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -146,7 +137,6 @@ export default function EditEventPage() {
     );
   }
 
-  // Show error if any
   if (error) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -178,9 +168,6 @@ export default function EditEventPage() {
     setIsLoading(true);
     setError("");
 
-    console.log("Form data before submission:", formData);
-
-    // Basic validation
     if (
       !formData.name ||
       !formData.description ||
@@ -191,33 +178,25 @@ export default function EditEventPage() {
       setIsLoading(false);
       return;
     }
-
     if (!formData.startDateTime || !formData.endDateTime) {
       setError("Please select start and end date/time.");
       setIsLoading(false);
       return;
     }
-
     if (new Date(formData.startDateTime) >= new Date(formData.endDateTime)) {
       setError("End date must be after start date.");
       setIsLoading(false);
       return;
     }
-
     if (formData.ticketPrice < 0 || formData.totalTickets <= 0) {
       setError("Please enter valid ticket price and quantity.");
       setIsLoading(false);
       return;
     }
-
     try {
-      // Update event using utility function
       await updateEvent(eventId, formData);
-
-      // Redirect to my events page after successful update
       router.push("/events/my-events");
     } catch (error: any) {
-      console.error("Event update error:", error);
       setError(error.message || "Failed to update event. Please try again.");
     } finally {
       setIsLoading(false);
@@ -235,7 +214,6 @@ export default function EditEventPage() {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <Button
             variant="ghost"
@@ -248,17 +226,13 @@ export default function EditEventPage() {
           <h1 className="text-3xl font-bold text-white mb-2">Edit Event</h1>
           <p className="text-gray-400">Update the details of your event</p>
         </div>
-
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Basic Information */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6">
                   Basic Information
                 </h2>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -274,7 +248,6 @@ export default function EditEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Description *
@@ -289,7 +262,6 @@ export default function EditEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Category *
@@ -310,14 +282,11 @@ export default function EditEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Location & Venue */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <MapPin className="w-5 h-5 mr-2" />
                   Location & Venue
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -333,7 +302,6 @@ export default function EditEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       City, Country *
@@ -350,14 +318,11 @@ export default function EditEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Date & Time */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <Calendar className="w-5 h-5 mr-2" />
                   Date & Time
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -372,7 +337,6 @@ export default function EditEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       End Date & Time *
@@ -388,14 +352,11 @@ export default function EditEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Ticketing */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <DollarSign className="w-5 h-5 mr-2" />
                   Ticketing
                 </h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -413,7 +374,6 @@ export default function EditEventPage() {
                       required
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Total Tickets Available *
@@ -432,29 +392,22 @@ export default function EditEventPage() {
                 </div>
               </Card>
             </div>
-
-            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              {/* Event Image */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <ImageIcon className="w-5 h-5 mr-2" />
                   Event Image
                 </h2>
-
                 <ImageUploader
                   imageUrl={formData.imageUrl}
                   onImageUpload={handleImageUpload}
                   onImageRemove={handleImageRemove}
                 />
               </Card>
-
-              {/* Organizer Info */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h2 className="text-xl font-semibold text-white mb-6">
                   Organizer Information
                 </h2>
-
                 <div className="space-y-4">
                   <div>
                     <label className="block text-white font-medium mb-2">
@@ -468,7 +421,6 @@ export default function EditEventPage() {
                       className="bg-gray-800 border-gray-700 text-white"
                     />
                   </div>
-
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Contact Email
@@ -483,15 +435,12 @@ export default function EditEventPage() {
                   </div>
                 </div>
               </Card>
-
-              {/* Submit Button */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 {error && (
                   <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-md">
                     <p className="text-red-300 text-sm">{error}</p>
                   </div>
                 )}
-
                 <div className="space-y-3">
                   <Button
                     type="submit"
@@ -501,7 +450,6 @@ export default function EditEventPage() {
                   >
                     {isLoading ? "Updating Event..." : "Update Event"}
                   </Button>
-
                   <Button
                     type="button"
                     variant="ghost"

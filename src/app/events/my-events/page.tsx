@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { useAuth } from "@/services/auth/AuthProvider";
 import {
   Event,
   EVENT_CATEGORIES,
@@ -14,9 +14,8 @@ import {
   formatTime,
   formatPrice,
   getEventStatus,
-  getEvents,
   getOrganizerEvents,
-} from "@/lib/events";
+} from "@/services/eventsServices";
 import {
   Plus,
   Search,
@@ -24,7 +23,6 @@ import {
   Calendar,
   MapPin,
   Users,
-  DollarSign,
   Clock,
 } from "lucide-react";
 
@@ -36,19 +34,16 @@ export default function EventsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
 
-  // First useEffect - handle authentication and fetch events
   useEffect(() => {
-    // Check authentication first
     if (!authLoading && !user) {
       router.push("/auth/signin");
       return;
     }
 
     if (!user) {
-      return; // Wait for user to be loaded
+      return;
     }
 
-    // Fetch events from API or mock data
     const fetchEvents = async () => {
       try {
         const response = await getOrganizerEvents();
@@ -62,11 +57,9 @@ export default function EventsPage() {
     fetchEvents();
   }, [user, router, authLoading]);
 
-  // Second useEffect - handle filtering (must be before any conditional returns)
   useEffect(() => {
     let filtered = events;
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
         (event) =>
@@ -76,7 +69,6 @@ export default function EventsPage() {
       );
     }
 
-    // Filter by category
     if (selectedCategory && selectedCategory !== "All") {
       filtered = filtered.filter(
         (event) => event.category === selectedCategory
@@ -86,8 +78,6 @@ export default function EventsPage() {
     setFilteredEvents(filtered);
   }, [events, searchTerm, selectedCategory]);
 
-  // Now we can have conditional returns after all hooks are defined
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -95,8 +85,6 @@ export default function EventsPage() {
       </div>
     );
   }
-
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -114,7 +102,6 @@ export default function EventsPage() {
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">My Events</h1>
@@ -131,9 +118,7 @@ export default function EventsPage() {
           )}
         </div>
 
-        {/* Search and Filters */}
         <div className="flex flex-col lg:flex-row gap-4 mb-8">
-          {/* Search */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
@@ -145,7 +130,6 @@ export default function EventsPage() {
             />
           </div>
 
-          {/* Category Filter */}
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-gray-400" />
             <select
@@ -162,7 +146,6 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Events Grid */}
         {filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredEvents.map((event) => (
@@ -172,7 +155,6 @@ export default function EventsPage() {
                 className="cursor-pointer"
               >
                 <Card className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-colors cursor-pointer group overflow-hidden">
-                  {/* Event Image */}
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={event.imageUrl}
@@ -209,7 +191,6 @@ export default function EventsPage() {
                     </div>
                   </div>
 
-                  {/* Event Details */}
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
                       {event.name}
@@ -218,7 +199,6 @@ export default function EventsPage() {
                       {event.description}
                     </p>
 
-                    {/* Event Meta */}
                     <div className="space-y-2">
                       <div className="flex items-center text-gray-400 text-sm">
                         <Calendar className="w-4 h-4 mr-2" />
@@ -250,7 +230,6 @@ export default function EventsPage() {
                       </div>
                     </div>
 
-                    {/* Organizer */}
                     <div className="mt-4 pt-4 border-t border-gray-800">
                       <p className="text-gray-500 text-xs">
                         Organized by{" "}

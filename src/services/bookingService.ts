@@ -1,6 +1,4 @@
-// Booking-related API functions and utilities
 
-// Booking interfaces
 export interface BookingData {
   eventId: string | number;
   eventName: string;
@@ -25,14 +23,14 @@ export interface BookingResponse {
   customerEmail: string;
   customerName: string;
   numberOfTickets: number;
-  quantity?: number; // alias for numberOfTickets
+  quantity?: number; 
   totalAmount: number;
-  totalPrice?: number; // alias for totalAmount
+  totalPrice?: number; 
   paymentMethod: string;
   bookingDate: string;
   status: "CONFIRMED" | "CANCELLED" | "PENDING" | "FAILED";
   ticketNumbers?: string[];
-  // Event details (if included in response)
+
   event?: {
     id: string;
     name: string;
@@ -50,11 +48,11 @@ export interface BookingResponse {
   };
 }
 
-// API base URL for booking service
+// base URL
 const BOOKING_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL_BOOKINGS || "http://localhost:3001";
 
-// Helper function for API calls
+//function for API calls
 async function bookingApiCall(
   endpoint: string,
   options: RequestInit = {}
@@ -162,38 +160,8 @@ export async function updateBookingStatus(
   }
 }
 
-// Helper function to validate credit card number (basic validation)
-// export function validateCreditCard(cardNumber: string): boolean {
-//   // Remove spaces and hyphens
-//   const cleanCardNumber = cardNumber.replace(/[\s-]/g, "");
 
-//   // Check if it's all digits and has proper length
-//   if (!/^\d{13,19}$/.test(cleanCardNumber)) {
-//     return false;
-//   }
-
-//   // Luhn algorithm check
-//   let sum = 0;
-//   let isEven = false;
-
-//   for (let i = cleanCardNumber.length - 1; i >= 0; i--) {
-//     let digit = parseInt(cleanCardNumber.charAt(i));
-
-//     if (isEven) {
-//       digit *= 2;
-//       if (digit > 9) {
-//         digit -= 9;
-//       }
-//     }
-
-//     sum += digit;
-//     isEven = !isEven;
-//   }
-
-//   return sum % 10 === 0;
-// }
-
-// Helper function to validate expiry date
+// validate expiry date
 export function validateExpiryDate(expiry: string): boolean {
   const expRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$|^([0-9]{4})-(0[1-9]|1[0-2])$/;
 
@@ -206,7 +174,7 @@ export function validateExpiryDate(expiry: string): boolean {
   if (expiry.includes("/")) {
     const [monthStr, yearStr] = expiry.split("/");
     month = parseInt(monthStr);
-    year = 2000 + parseInt(yearStr); // Assuming YY format
+    year = 2000 + parseInt(yearStr); 
   } else {
     const [yearStr, monthStr] = expiry.split("-");
     month = parseInt(monthStr);
@@ -224,18 +192,15 @@ export function validateExpiryDate(expiry: string): boolean {
   return true;
 }
 
-// Helper function to validate CVC
 export function validateCVC(cvc: string): boolean {
   return /^[0-9]{3,4}$/.test(cvc);
 }
 
-// Format card number for display
 export function formatCardNumber(cardNumber: string): string {
   const cleanCardNumber = cardNumber.replace(/[\s-]/g, "");
   return cleanCardNumber.replace(/(.{4})/g, "$1 ").trim();
 }
 
-// Mask card number for display
 export function maskCardNumber(cardNumber: string): string {
   const cleanCardNumber = cardNumber.replace(/[\s-]/g, "");
   const firstFour = cleanCardNumber.substring(0, 4);

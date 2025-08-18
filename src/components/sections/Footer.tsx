@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Facebook,
   Twitter,
@@ -18,10 +16,10 @@ import {
 export default function Footer() {
   return (
     <footer className="bg-gray-950 border-t border-gray-800">
-      {/* Main Footer Content */}
+
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
@@ -38,33 +36,25 @@ export default function Footer() {
             <div className="flex space-x-4">
               <button
                 className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
-                onClick={() => {
-                  /* Handle Facebook */
-                }}
+                onClick={() => {}}
               >
                 <Facebook className="h-5 w-5 text-white" />
               </button>
               <button
                 className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
-                onClick={() => {
-                  /* Handle Twitter */
-                }}
+                onClick={() => {}}
               >
                 <Twitter className="h-5 w-5 text-white" />
               </button>
               <button
                 className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
-                onClick={() => {
-                  /* Handle Instagram */
-                }}
+                onClick={() => {}}
               >
                 <Instagram className="h-5 w-5 text-white" />
               </button>
               <button
                 className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
-                onClick={() => {
-                  /* Handle YouTube */
-                }}
+                onClick={() => {}}
               >
                 <Youtube className="h-5 w-5 text-white" />
               </button>
@@ -167,7 +157,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact & Apps */}
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">
               Get in Touch
@@ -194,9 +183,7 @@ export default function Footer() {
               <div className="space-y-2">
                 <button
                   className="flex items-center space-x-2 bg-gray-800 rounded-lg px-4 py-2 hover:bg-gray-700 transition-colors w-full"
-                  onClick={() => {
-                    /* Handle App Store */
-                  }}
+                  onClick={() => {}}
                 >
                   <Apple className="h-5 w-5 text-white" />
                   <div className="text-left">
@@ -209,9 +196,7 @@ export default function Footer() {
 
                 <button
                   className="flex items-center space-x-2 bg-gray-800 rounded-lg px-4 py-2 hover:bg-gray-700 transition-colors w-full"
-                  onClick={() => {
-                    /* Handle Google Play */
-                  }}
+                  onClick={() => {}}
                 >
                   <Play className="h-5 w-5 text-white" />
                   <div className="text-left">
@@ -227,7 +212,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

@@ -31,10 +31,9 @@ interface User {
   isVerified: boolean;
 }
 
-// Get API base URL from environment variables
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_AUTH || "http://localhost:3000";
 
-// Helper function for API calls
+// function for API calls
 async function apiCall(
   endpoint: string,
   options: RequestInit = {}
@@ -71,7 +70,7 @@ async function apiCall(
 export async function signUpUser(data: SignUpData): Promise<AuthResult> {
   try {
     console.log("Signing up user with data:", data);
-    const response = await apiCall("/auth/signup", {
+    const response = await apiCall("auth/signup", {
       method: "POST",
       body: JSON.stringify({
         email: data.email,
@@ -97,7 +96,7 @@ export async function signUpUser(data: SignUpData): Promise<AuthResult> {
   }
 }
 
-// Helper function to decode JWT token
+//decode JWT token
 function decodeJWT(token: string): any {
   try {
     const base64Url = token.split(".")[1];
@@ -119,7 +118,7 @@ function decodeJWT(token: string): any {
 export async function signInUser(data: SignInData): Promise<AuthResult> {
   try {
     console.log("Signing in user with data:", data);
-    const response = await apiCall("/auth/login", {
+    const response = await apiCall("auth/login", {
       method: "POST",
       body: JSON.stringify({
         email: data.email,
@@ -128,7 +127,6 @@ export async function signInUser(data: SignInData): Promise<AuthResult> {
     });
     console.log("Sign in response:", response);
 
-    // Extract user data from ID token if available
     let userData = response.data;
     if (response.data?.idToken) {
       const decodedToken = decodeJWT(response.data.idToken);
@@ -144,7 +142,6 @@ export async function signInUser(data: SignInData): Promise<AuthResult> {
             userType: decodedToken.userType || decodedToken["custom:userType"],
             isVerified: decodedToken.email_verified || true,
             role: decodedToken["cognito:groups"] || [],
-            // Include any other user attributes from the token
             ...Object.keys(decodedToken)
               .filter(
                 (key) =>
@@ -166,7 +163,6 @@ export async function signInUser(data: SignInData): Promise<AuthResult> {
       }
     }
 
-    // Store the token and user data in localStorage
     if (response.data && typeof window !== "undefined") {
       localStorage.setItem("authToken", response.data.accessToken);
       if (userData.user) {
@@ -192,7 +188,7 @@ export async function signInUser(data: SignInData): Promise<AuthResult> {
 // Verify email with code
 export async function verifyEmail(data: VerifyEmailData): Promise<AuthResult> {
   try {
-    const response = await apiCall("/auth/verify-email", {
+    const response = await apiCall("auth/verify-email", {
       method: "POST",
       body: JSON.stringify({
         email: data.email,
@@ -220,7 +216,7 @@ export async function resendVerificationCode(
   email: string
 ): Promise<AuthResult> {
   try {
-    const response = await apiCall("/auth/resend-verification", {
+    const response = await apiCall("auth/resend-verification", {
       method: "POST",
       body: JSON.stringify({ email }),
     });
@@ -244,17 +240,13 @@ export async function resendVerificationCode(
 // Sign out user
 export async function signOutUser(): Promise<AuthResult> {
   try {
-    // Call backend to invalidate token (optional)
     try {
-      await apiCall("/auth/signout", {
+      await apiCall("auth/signout", {
         method: "POST",
       });
     } catch (error) {
-      // Continue with local cleanup even if API call fails
       console.warn("Backend signout failed:", error);
     }
-
-    // Clear local storage
     if (typeof window !== "undefined") {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
@@ -277,16 +269,12 @@ export async function signOutUser(): Promise<AuthResult> {
 export async function getCurrentUser(): Promise<User | null> {
   try {
     if (typeof window === "undefined") return null;
-
-    // First check localStorage for cached user
     const cachedUser = localStorage.getItem("user");
     const token = localStorage.getItem("authToken");
 
     if (!token) {
       return null;
     }
-
-    // If we have cached user data, return it
     if (cachedUser) {
       try {
         return JSON.parse(cachedUser);
@@ -294,9 +282,7 @@ export async function getCurrentUser(): Promise<User | null> {
         console.error("Error parsing cached user:", error);
       }
     }
-
-    // Otherwise, fetch from backend
-    const response = await apiCall("/auth/me", {
+    const response = await apiCall("auth/me", {
       method: "GET",
     });
 
@@ -308,8 +294,6 @@ export async function getCurrentUser(): Promise<User | null> {
     return null;
   } catch (error: any) {
     console.error("Get current user error:", error);
-
-    // If unauthorized, clear stored data
     if (
       typeof window !== "undefined" &&
       (error.message.includes("401") || error.message.includes("Unauthorized"))
@@ -322,7 +306,6 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 }
 
-// Check if user is authenticated
 export function isAuthenticated(): boolean {
   if (typeof window === "undefined") return false;
   return !!localStorage.getItem("authToken");
@@ -335,57 +318,57 @@ export function getAuthToken(): string | null {
 }
 
 // Forgot password
-export async function forgotPassword(email: string): Promise<AuthResult> {
-  try {
-    const response = await apiCall("/auth/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
+// export async function forgotPassword(email: string): Promise<AuthResult> {
+//   try {
+//     const response = await apiCall("/auth/forgot-password", {
+//       method: "POST",
+//       body: JSON.stringify({ email }),
+//     });
 
-    return {
-      success: true,
-      message:
-        response.message || "Password reset instructions sent to your email.",
-      data: response.data,
-    };
-  } catch (error: any) {
-    console.error("Forgot password error:", error);
-    return {
-      success: false,
-      message:
-        error.message ||
-        "Failed to send password reset email. Please try again.",
-    };
-  }
-}
+//     return {
+//       success: true,
+//       message:
+//         response.message || "Password reset instructions sent to your email.",
+//       data: response.data,
+//     };
+//   } catch (error: any) {
+//     console.error("Forgot password error:", error);
+//     return {
+//       success: false,
+//       message:
+//         error.message ||
+//         "Failed to send password reset email. Please try again.",
+//     };
+//   }
+// }
 
 // Reset password
-export async function resetPassword(
-  token: string,
-  newPassword: string
-): Promise<AuthResult> {
-  try {
-    const response = await apiCall("/auth/reset-password", {
-      method: "POST",
-      body: JSON.stringify({
-        token,
-        password: newPassword,
-      }),
-    });
+// export async function resetPassword(
+//   token: string,
+//   newPassword: string
+// ): Promise<AuthResult> {
+//   try {
+//     const response = await apiCall("/auth/reset-password", {
+//       method: "POST",
+//       body: JSON.stringify({
+//         token,
+//         password: newPassword,
+//       }),
+//     });
 
-    return {
-      success: true,
-      message: response.message || "Password reset successfully.",
-      data: response.data,
-    };
-  } catch (error: any) {
-    console.error("Reset password error:", error);
-    return {
-      success: false,
-      message: error.message || "Failed to reset password. Please try again.",
-    };
-  }
-}
+//     return {
+//       success: true,
+//       message: response.message || "Password reset successfully.",
+//       data: response.data,
+//     };
+//   } catch (error: any) {
+//     console.error("Reset password error:", error);
+//     return {
+//       success: false,
+//       message: error.message || "Failed to reset password. Please try again.",
+//     };
+//   }
+// }
 
 
 export const updateUserDetails = async (
@@ -393,12 +376,11 @@ export const updateUserDetails = async (
   userId: string
 ): Promise<AuthResult> => {
   try {
-    const response = await apiCall(`/auth/update`, {
+    const response = await apiCall(`auth/update`, {
       method: "POST",
       body: JSON.stringify({ name: userData.name }),
     });
 
-    // Update only the name in the cached user object
     if (response.status === "SUCCESS") {
       const cachedUser = localStorage.getItem("user");
       let updatedUser = response.user;

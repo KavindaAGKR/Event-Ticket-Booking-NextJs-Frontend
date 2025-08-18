@@ -13,8 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
-import { signInUser } from "@/lib/auth/cognito";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { signInUser } from "@/services/auth/authServices";
+import { useAuth } from "@/services/auth/AuthProvider";
 
 export default function SignIn() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function SignIn() {
       ...prev,
       [name]: value,
     }));
-    setError(""); // Clear error when user types
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,9 +45,8 @@ export default function SignIn() {
       const result = await signInUser(formData);
 
       if (result.success && result.token) {
-        // Update auth context
         login(result.data.user, result.token);
-        // Redirect to home
+
         router.push("/");
       } else {
         setError(result.message);
@@ -61,12 +60,10 @@ export default function SignIn() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Back to home link */}
         <div className="mb-6">
           <Link
             href="/"
@@ -79,7 +76,6 @@ export default function SignIn() {
 
         <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
           <CardHeader className="text-center">
-            {/* Logo */}
             <div className="flex justify-center mb-4">
               <div className="h-12 w-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
                 <span className="text-white font-bold text-xl">E</span>
@@ -96,7 +92,6 @@ export default function SignIn() {
 
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -118,8 +113,6 @@ export default function SignIn() {
                   />
                 </div>
               </div>
-
-              {/* Password Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="password"
@@ -152,15 +145,11 @@ export default function SignIn() {
                   </button>
                 </div>
               </div>
-
-              {/* Error Message */}
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
                   <p className="text-red-400 text-sm">{error}</p>
                 </div>
               )}
-
-              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white"
@@ -169,8 +158,6 @@ export default function SignIn() {
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
-
-            {/* Forgot Password Link */}
             <div className="text-center">
               <Link
                 href="/auth/forgot-password"
@@ -179,8 +166,6 @@ export default function SignIn() {
                 Forgot your password?
               </Link>
             </div>
-
-            {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-gray-600" />
@@ -189,8 +174,6 @@ export default function SignIn() {
                 <span className="bg-gray-900 px-2 text-gray-400">Or</span>
               </div>
             </div>
-
-            {/* Sign Up Link */}
             <div className="text-center">
               <p className="text-gray-400 text-sm">
                 Don't have an account?{" "}

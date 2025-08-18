@@ -2,15 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Calendar, DollarSign } from "lucide-react";
+import { MapPin, Clock, Calendar } from "lucide-react";
 import {
   Event,
   getEvents,
@@ -18,7 +12,7 @@ import {
   formatTime,
   formatPrice,
   getEventStatus,
-} from "@/lib/events";
+} from "@/services/eventsServices";
 
 export default function FeaturedEvents() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -29,7 +23,6 @@ export default function FeaturedEvents() {
     const fetchFeaturedEvents = async () => {
       try {
         setIsLoading(true);
-        // Fetch all events and take the first 10
         const allEvents = await getEvents();
         setEvents(allEvents.slice(0, 10));
       } catch (error) {
@@ -111,7 +104,6 @@ export default function FeaturedEvents() {
                       alt={event.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       onError={(e) => {
-                        // Fallback to gradient background if image fails to load
                         const target = e.target as HTMLImageElement;
                         target.style.display = "none";
                         const parent = target.parentElement;
@@ -124,7 +116,7 @@ export default function FeaturedEvents() {
                         }
                       }}
                     />
-                    {/* Fallback gradient background */}
+                    // ...existing code...
                     <div className="fallback-bg hidden absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 items-center justify-center">
                       <div className="text-white text-6xl font-bold opacity-20">
                         {event.category.charAt(0)}

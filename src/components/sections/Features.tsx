@@ -126,7 +126,6 @@ export default function Features() {
           ))}
         </div>
 
-        {/* Stats Section */}
         <div className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-2xl p-8 backdrop-blur-sm">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>

@@ -22,7 +22,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
-import { signUpUser } from "@/lib/auth/cognito";
+import { signUpUser } from "@/services/auth/authServices";
 
 export default function SignUp() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function SignUp() {
       ...prev,
       [name]: value,
     }));
-    setError(""); // Clear error when user types
+    setError(""); 
   };
 
   const validateForm = () => {
@@ -88,7 +88,6 @@ export default function SignUp() {
       });
 
       if (result.success) {
-        // Redirect to email verification page
         router.push(
           `/auth/verify-email?email=${encodeURIComponent(formData.email)}`
         );
@@ -104,12 +103,11 @@ export default function SignUp() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      {/* Background effects */}
+
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Back to home link */}
         <div className="mb-6">
           <Link
             href="/"
@@ -122,7 +120,6 @@ export default function SignUp() {
 
         <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
           <CardHeader className="text-center">
-            {/* Logo */}
             <div className="flex justify-center mb-4">
               <div className="h-12 w-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
                 <span className="text-white font-bold text-xl">E</span>
@@ -139,7 +136,6 @@ export default function SignUp() {
 
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="name"
@@ -161,8 +157,6 @@ export default function SignUp() {
                   />
                 </div>
               </div>
-
-              {/* User Type Dropdown */}
               <div className="space-y-2">
                 <label
                   htmlFor="userType"
@@ -187,8 +181,6 @@ export default function SignUp() {
                   <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
                 </div>
               </div>
-
-              {/* Email Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -210,8 +202,6 @@ export default function SignUp() {
                   />
                 </div>
               </div>
-
-              {/* Password Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="password"
@@ -245,8 +235,6 @@ export default function SignUp() {
                   </button>
                 </div>
               </div>
-
-              {/* Confirm Password Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="confirmPassword"
@@ -280,7 +268,6 @@ export default function SignUp() {
                 </div>
               </div>
 
-              {/* Terms and Conditions */}
               <div className="flex items-center space-x-2">
                 <button
                   type="button"
@@ -310,15 +297,12 @@ export default function SignUp() {
                   </Link>
                 </label>
               </div>
-
-              {/* Error Message */}
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
                   <p className="text-red-400 text-sm">{error}</p>
                 </div>
               )}
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white"
@@ -328,7 +312,6 @@ export default function SignUp() {
               </Button>
             </form>
 
-            {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-gray-600" />
@@ -338,7 +321,6 @@ export default function SignUp() {
               </div>
             </div>
 
-            {/* Sign In Link */}
             <div className="text-center">
               <p className="text-gray-400 text-sm">
                 Already have an account?{" "}

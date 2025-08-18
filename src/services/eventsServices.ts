@@ -25,11 +25,10 @@ export interface EventFilters {
   dateRange?: [string, string];
 }
 
-// API base URL
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL_EVENTS || "http://localhost:3002";
 
-// Helper function for API calls
+//function for API calls
 async function apiCall(
   endpoint: string,
   options: RequestInit = {}
@@ -88,17 +87,7 @@ export async function getOrganizerEvents(
   filters?: EventFilters
 ): Promise<Event[]> {
   try {
-    // const queryParams = new URLSearchParams();
-
-    // if (filters?.search) queryParams.append("search", filters.search);
-    // if (filters?.category && filters.category !== "All") {
-    //   queryParams.append("category", filters.category);
-    // }
-    // if (filters?.location) queryParams.append("location", filters.location);
-
-    //const queryString = queryParams.toString();
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    const endpoint = `/events/my-events`;
+   const endpoint = `/events/my-events`;
 
     const response = await apiCall(endpoint);
     return response.data || [];
@@ -123,8 +112,6 @@ export async function getEventById(eventId: string): Promise<Event | null> {
 export async function createEvent(eventData: CreateEventData): Promise<Event> {
   try {
     console.log("Creating event with data:", eventData);
-
-    // Format datetime fields to proper ISO-8601 format
     const formattedEventData = {
       ...eventData,
       startDateTime: formatDateTimeForBackend(eventData.startDateTime),
@@ -144,13 +131,11 @@ export async function createEvent(eventData: CreateEventData): Promise<Event> {
   }
 }
 
-// Update existing event
 export async function updateEvent(
   eventId: string,
   eventData: Partial<CreateEventData>
 ): Promise<Event> {
   try {
-    // Format datetime fields if they exist
     const formattedEventData = { ...eventData };
     if (eventData.startDateTime) {
       formattedEventData.startDateTime = formatDateTimeForBackend(
@@ -186,16 +171,13 @@ export async function deleteEvent(eventId: string): Promise<void> {
   }
 }
 
-// Utility functions
 export const formatDateTimeForBackend = (dateTimeString: string): string => {
   console.log("Original datetime string:", dateTimeString);
 
-  // If empty or null, throw error
   if (!dateTimeString) {
     throw new Error("DateTime string is required");
   }
 
-  // If the datetime string is already in full ISO format, return as is
   if (
     dateTimeString.includes("Z") ||
     dateTimeString.match(/[+-]\d{2}:\d{2}$/)
@@ -204,23 +186,19 @@ export const formatDateTimeForBackend = (dateTimeString: string): string => {
     return dateTimeString;
   }
 
-  // Handle datetime-local format (YYYY-MM-DDTHH:MM) or similar variations
   if (dateTimeString.includes("T")) {
     let formatted: string;
 
-    // Check if it has seconds
     if (dateTimeString.match(/T\d{2}:\d{2}:\d{2}/)) {
-      // Has seconds but no timezone
+
       if (dateTimeString.match(/T\d{2}:\d{2}:\d{2}$/)) {
         formatted = `${dateTimeString}.000Z`;
       } else if (dateTimeString.match(/T\d{2}:\d{2}:\d{2}\.\d{3}$/)) {
-        // Has seconds and milliseconds but no timezone
         formatted = `${dateTimeString}Z`;
       } else {
         formatted = dateTimeString;
       }
     } else {
-      // No seconds, add them
       formatted = `${dateTimeString}:00.000Z`;
     }
 
@@ -228,7 +206,6 @@ export const formatDateTimeForBackend = (dateTimeString: string): string => {
     return formatted;
   }
 
-  // Fallback: try to parse and format as ISO string
   const date = new Date(dateTimeString);
   if (isNaN(date.getTime())) {
     throw new Error(`Invalid date format: ${dateTimeString}`);
@@ -285,7 +262,6 @@ export const getEventStatus = (startDateTime: string, endDateTime: string) => {
 };
 
 export const generateEventImageUrl = (eventName: string, category: string) => {
-  // Generate appropriate Unsplash URLs based on event category
   const categoryKeywords: Record<string, string> = {
     Technology: "technology-conference",
     Music: "music-concert",

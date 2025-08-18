@@ -5,14 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth/AuthProvider";
+import { useAuth } from "@/services/auth/AuthProvider";
 import {
   getEventById,
   Event,
   formatPrice,
   formatDate,
   formatTime,
-} from "@/lib/events";
+} from "@/services/eventsServices";
 import {
   createBooking,
   BookingData,
@@ -24,8 +24,6 @@ import {
   ArrowLeft,
   Calendar,
   MapPin,
-  Users,
-  DollarSign,
   Clock,
   CreditCard,
   Lock,
@@ -38,18 +36,15 @@ export default function BookingPage() {
   const searchParams = useSearchParams();
   const { user, isLoading: authLoading } = useAuth();
 
-  // Get URL parameters
   const eventId = searchParams.get("eventId");
   const quantity = parseInt(searchParams.get("quantity") || "1");
 
-  // State management
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Form state
   const [formData, setFormData] = useState({
     customerName: "",
     customerEmail: "",
@@ -63,14 +58,12 @@ export default function BookingPage() {
     },
   });
 
-  // Check authentication
   useEffect(() => {
     if (!authLoading && !user) {
       router.push("/auth/signin");
     }
   }, [user, router, authLoading]);
 
-  // Fetch event data
   useEffect(() => {
     const fetchEvent = async () => {
       if (!eventId) {
@@ -89,7 +82,6 @@ export default function BookingPage() {
 
         setEvent(eventData);
 
-        // Pre-fill user data if available
         if (user) {
           setFormData((prev) => ({
             ...prev,
@@ -98,20 +90,17 @@ export default function BookingPage() {
           }));
         }
       } catch (error) {
-        console.error("Failed to fetch event:", error);
         router.push("/events");
       } finally {
         setIsLoading(false);
       }
     };
 
-    // Only fetch event if user is authenticated or auth loading is complete
     if (!authLoading && user) {
       fetchEvent();
     }
   }, [eventId, router, user, authLoading]);
 
-  // Show loading while authentication is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -120,7 +109,6 @@ export default function BookingPage() {
     );
   }
 
-  // Show loading if user is not authenticated (will redirect)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -129,7 +117,6 @@ export default function BookingPage() {
     );
   }
 
-  // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -149,7 +136,6 @@ export default function BookingPage() {
       }));
     }
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -158,14 +144,13 @@ export default function BookingPage() {
     }
   };
 
-  // Format card number input
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatCardNumber(e.target.value);
     setFormData((prev) => ({
       ...prev,
       cardDetails: {
         ...prev.cardDetails,
-        cardNo: formatted.replace(/\s/g, ""), // Store without spaces
+        cardNo: formatted.replace(/\s/g, ""),
       },
     }));
 
@@ -174,11 +159,9 @@ export default function BookingPage() {
     }
   };
 
-  // Validate form
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Customer details validation
     if (!formData.customerName.trim()) {
       newErrors.customerName = "Name is required";
     }
@@ -193,7 +176,6 @@ export default function BookingPage() {
       newErrors.numberOfTickets = "At least 1 ticket is required";
     }
 
-    // Card details validation
     if (!formData.cardDetails.name.trim()) {
       newErrors["card.name"] = "Cardholder name is required";
     }
@@ -218,7 +200,6 @@ export default function BookingPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -244,16 +225,12 @@ export default function BookingPage() {
       };
 
       const result = await createBooking(bookingData);
-      console.log("Booking successful:", result);
-
       setBookingSuccess(true);
 
-      // Redirect to confirmation page after 3 seconds
       setTimeout(() => {
         router.push("/my-bookings");
       }, 3000);
     } catch (error: any) {
-      console.error("Booking failed:", error);
       setErrors({
         submit: error.message || "Failed to create booking. Please try again.",
       });
@@ -302,7 +279,6 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-gray-950">
-      {/* Header */}
       <div className="container mx-auto px-4 py-6">
         <Button
           variant="ghost"
@@ -325,7 +301,6 @@ export default function BookingPage() {
 
       <div className="container mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Event Summary */}
           <div className="lg:col-span-1">
             <Card className="bg-gray-900 border-gray-800 p-6 sticky top-8">
               <h3 className="text-lg font-bold text-white mb-4">
@@ -378,10 +353,8 @@ export default function BookingPage() {
             </Card>
           </div>
 
-          {/* Booking Form */}
           <div className="lg:col-span-2">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Customer Details */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h3 className="text-lg font-bold text-white mb-4">
                   Customer Details
@@ -444,7 +417,6 @@ export default function BookingPage() {
                 </div>
               </Card>
 
-              {/* Payment Details */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center">
                   <CreditCard className="w-5 h-5 mr-2" />
@@ -534,7 +506,6 @@ export default function BookingPage() {
                 </div>
               </Card>
 
-              {/* Error Message */}
               {errors.submit && (
                 <Card className="bg-red-900/20 border-red-800 p-4">
                   <div className="flex items-center text-red-400">
@@ -544,7 +515,6 @@ export default function BookingPage() {
                 </Card>
               )}
 
-              {/* Submit Button */}
               <Card className="bg-gray-900 border-gray-800 p-6">
                 <Button
                   type="submit"

@@ -98,9 +98,7 @@ export default function Categories() {
             <Card
               key={category.id}
               className="group cursor-pointer hover:scale-105 transition-all duration-300 bg-gray-800/30 border-gray-700 hover:border-purple-500"
-              onClick={() => {
-                /* Handle category selection */
-              }}
+              onClick={() => {}}
             >
               <CardContent className="p-6 text-center">
                 <div
@@ -127,9 +125,7 @@ export default function Categories() {
           </p>
           <button
             className="text-purple-400 hover:text-purple-300 font-semibold underline underline-offset-4"
-            onClick={() => {
-              /* Handle view all categories */
-            }}
+            onClick={() => {}}
           >
             View All Categories
           </button>

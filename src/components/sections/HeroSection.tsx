@@ -7,9 +7,7 @@ import { Search, MapPin, Calendar } from "lucide-react";
 export default function HeroSection() {
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-purple-900 via-gray-900 to-indigo-900">
-
       <div className="absolute inset-0 bg-black/30" />
-
 
       <div className="absolute inset-0 opacity-10">
         <div className="h-full w-full bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
@@ -30,10 +28,8 @@ export default function HeroSection() {
             more. Your next unforgettable experience is just a click away.
           </p>
 
-          {/* Search Section */}
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 max-w-4xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Event Search */}
               <div className="md:col-span-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -41,14 +37,11 @@ export default function HeroSection() {
                     type="text"
                     placeholder="Search events, artists, venues..."
                     className="pl-10 h-12 text-base bg-gray-800/50 border-gray-600"
-                    onChange={() => {
-                      
-                    }}
+                    onChange={() => {}}
                   />
                 </div>
               </div>
 
-              {/* Location */}
               <div>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -56,23 +49,18 @@ export default function HeroSection() {
                     type="text"
                     placeholder="Location"
                     className="pl-10 h-12 text-base bg-gray-800/50 border-gray-600"
-                    onChange={() => {
-                     
-                    }}
+                    onChange={() => {}}
                   />
                 </div>
               </div>
 
-              {/* Date */}
               <div>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     type="date"
                     className="pl-10 h-12 text-base bg-gray-800/50 border-gray-600"
-                    onChange={() => {
-                      /* Handle date */
-                    }}
+                    onChange={() => {}}
                   />
                 </div>
               </div>
@@ -90,7 +78,6 @@ export default function HeroSection() {
               </Button>
             </div>
           </div>
-
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
             <div className="text-center">
