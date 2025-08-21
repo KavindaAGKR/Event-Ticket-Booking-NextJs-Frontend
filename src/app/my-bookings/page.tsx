@@ -205,7 +205,7 @@ export default function MyBookingsPage() {
                   onClick={() => setStatusFilter(status)}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                     statusFilter === status
-                      ? "bg-purple-600 text-white"
+                      ? "bg-blue-600 text-white"
                       : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                   }`}
                 >
@@ -254,7 +254,7 @@ export default function MyBookingsPage() {
                                 {eventName}
                               </h3>
                               {eventData?.category && (
-                                <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                                <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                                   {eventData.category}
                                 </span>
                               )}

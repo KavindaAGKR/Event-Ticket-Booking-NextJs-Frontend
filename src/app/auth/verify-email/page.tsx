@@ -115,7 +115,7 @@ export default function VerifyEmail() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
@@ -133,7 +133,7 @@ export default function VerifyEmail() {
           <CardHeader className="text-center">
             {/* Email Icon */}
             <div className="flex justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+              <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                 <Mail className="h-8 w-8 text-white" />
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function VerifyEmail() {
               {email ? (
                 <>
                   We've sent a verification code to{" "}
-                  <span className="text-purple-400 font-medium">{email}</span>
+                  <span className="text-blue-400 font-medium">{email}</span>
                 </>
               ) : (
                 "Please enter your email and verification code"
@@ -216,7 +216,7 @@ export default function VerifyEmail() {
 
               <Button
                 type="submit"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 disabled={isLoading || verificationCode.length !== 6}
               >
                 {isLoading ? "Verifying..." : "Verify Email"}
@@ -256,7 +256,7 @@ export default function VerifyEmail() {
                 Already verified?{" "}
                 <Link
                   href="/auth/signin"
-                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
                 >
                   Sign in
                 </Link>

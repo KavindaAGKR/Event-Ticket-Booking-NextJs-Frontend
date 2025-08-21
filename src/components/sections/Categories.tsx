@@ -27,7 +27,7 @@ export default function Categories() {
       name: "Music & Concerts",
       icon: <Music className="h-8 w-8" />,
       count: 15420,
-      color: "from-pink-500 to-purple-600",
+      color: "from-cyan-500 to-blue-600",
     },
     {
       id: "sports",
@@ -62,7 +62,7 @@ export default function Categories() {
       name: "Comedy",
       icon: <Mic className="h-8 w-8" />,
       count: 1560,
-      color: "from-purple-500 to-pink-500",
+      color: "from-blue-500 to-cyan-500",
     },
     {
       id: "festivals",
@@ -97,7 +97,7 @@ export default function Categories() {
           {categories.map((category) => (
             <Card
               key={category.id}
-              className="group cursor-pointer hover:scale-105 transition-all duration-300 bg-gray-800/30 border-gray-700 hover:border-purple-500"
+              className="group cursor-pointer hover:scale-105 transition-all duration-300 bg-gray-800/30 border-gray-700 hover:border-blue-500"
               onClick={() => {}}
             >
               <CardContent className="p-6 text-center">
@@ -107,7 +107,7 @@ export default function Categories() {
                   <div className="text-white">{category.icon}</div>
                 </div>
 
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
                   {category.name}
                 </h3>
 
@@ -124,7 +124,7 @@ export default function Categories() {
             Can't find what you're looking for?
           </p>
           <button
-            className="text-purple-400 hover:text-purple-300 font-semibold underline underline-offset-4"
+            className="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-4"
             onClick={() => {}}
           >
             View All Categories

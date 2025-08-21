@@ -60,7 +60,7 @@ export default function SignIn() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
@@ -77,7 +77,7 @@ export default function SignIn() {
         <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                 <span className="text-white font-bold text-xl">E</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function SignIn() {
               )}
               <Button
                 type="submit"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing In..." : "Sign In"}
@@ -161,7 +161,7 @@ export default function SignIn() {
             <div className="text-center">
               <Link
                 href="/auth/forgot-password"
-                className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
                 Forgot your password?
               </Link>
@@ -179,7 +179,7 @@ export default function SignIn() {
                 Don't have an account?{" "}
                 <Link
                   href="/auth/signup"
-                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
                 >
                   Sign up
                 </Link>

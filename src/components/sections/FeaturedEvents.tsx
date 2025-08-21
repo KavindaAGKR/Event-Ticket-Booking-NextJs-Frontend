@@ -95,7 +95,7 @@ export default function FeaturedEvents() {
               {events.map((event) => (
                 <Card
                   key={event.id}
-                  className="group hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer bg-gray-800 border-gray-700 hover:border-purple-500"
+                  className="group hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer bg-gray-800 border-gray-700 hover:border-blue-500"
                   onClick={() => handleEventClick(event.id!)}
                 >
                   <div className="relative h-48 overflow-hidden">
@@ -117,13 +117,13 @@ export default function FeaturedEvents() {
                       }}
                     />
                     // ...existing code...
-                    <div className="fallback-bg hidden absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-600 items-center justify-center">
+                    <div className="fallback-bg hidden absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-600 items-center justify-center">
                       <div className="text-white text-6xl font-bold opacity-20">
                         {event.category.charAt(0)}
                       </div>
                     </div>
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
                         {event.category}
                       </span>
                       {(() => {
@@ -153,7 +153,7 @@ export default function FeaturedEvents() {
                   </div>
 
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg line-clamp-2 group-hover:text-purple-400 transition-colors text-white">
+                    <CardTitle className="text-lg line-clamp-2 group-hover:text-blue-400 transition-colors text-white">
                       {event.name}
                     </CardTitle>
                     <div className="flex items-center text-gray-400 text-sm space-x-4">
@@ -189,7 +189,7 @@ export default function FeaturedEvents() {
                         e.stopPropagation();
                         handleEventClick(event.id!);
                       }}
-                      className="group-hover:bg-purple-500 transition-colors"
+                      className="group-hover:bg-blue-500 transition-colors"
                     >
                       Get Tickets
                     </Button>
@@ -203,7 +203,7 @@ export default function FeaturedEvents() {
                 variant="outline"
                 size="lg"
                 onClick={handleViewAllEvents}
-                className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white"
+                className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white"
               >
                 View All Events
               </Button>

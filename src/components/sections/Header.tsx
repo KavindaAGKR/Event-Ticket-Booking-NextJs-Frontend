@@ -2,18 +2,18 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Search,  User, ShoppingCart,  } from "lucide-react";
+import { Search, User, ShoppingCart } from "lucide-react";
 import { useAuth } from "@/services/auth/AuthProvider";
 
 export default function Header() {
-  const { user} = useAuth();
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-900/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
               <span className="text-white font-bold">M</span>
             </div>
             <span className="text-xl font-bold text-white">myEvents</span>
@@ -26,7 +26,7 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search events, artists, venues..."
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               onFocus={() => {}}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && e.currentTarget.value.trim()) {
@@ -103,8 +103,8 @@ export default function Header() {
                 className="hidden md:flex items-center space-x-2"
                 title="My Profile"
               >
-                <div className="hidden md:flex items-center space-x-3 px-3 py-1 rounded-full bg-gray-800 border border-gray-700 hover:border-purple-500 transition-colors">
-                  <div className="h-7 w-7 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                <div className="hidden md:flex items-center space-x-3 px-3 py-1 rounded-full bg-gray-800 border border-gray-700 hover:border-blue-500 transition-colors">
+                  <div className="h-7 w-7 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                     <User className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-gray-300 text-sm">

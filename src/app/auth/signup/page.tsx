@@ -47,7 +47,7 @@ export default function SignUp() {
       ...prev,
       [name]: value,
     }));
-    setError(""); 
+    setError("");
   };
 
   const validateForm = () => {
@@ -103,8 +103,7 @@ export default function SignUp() {
 
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-indigo-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-indigo-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
 
       <div className="relative z-10 w-full max-w-md">
@@ -121,7 +120,7 @@ export default function SignUp() {
         <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                 <span className="text-white font-bold text-xl">E</span>
               </div>
             </div>
@@ -170,7 +169,7 @@ export default function SignUp() {
                     name="userType"
                     value={formData.userType}
                     onChange={handleInputChange}
-                    className="w-full pl-3 pr-10 py-2 bg-gray-800 border border-gray-600 text-white rounded-md appearance-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full pl-3 pr-10 py-2 bg-gray-800 border border-gray-600 text-white rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   >
                     <option value="user">User - Attend Events</option>
@@ -274,7 +273,7 @@ export default function SignUp() {
                   onClick={() => setAcceptTerms(!acceptTerms)}
                   className={`flex items-center justify-center w-4 h-4 rounded border ${
                     acceptTerms
-                      ? "bg-purple-600 border-purple-600"
+                      ? "bg-blue-600 border-blue-600"
                       : "border-gray-600 hover:border-gray-500"
                   } transition-colors`}
                 >
@@ -284,14 +283,14 @@ export default function SignUp() {
                   I agree to the{" "}
                   <Link
                     href="/terms"
-                    className="text-purple-400 hover:text-purple-300"
+                    className="text-blue-400 hover:text-blue-300"
                   >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
                   <Link
                     href="/privacy"
-                    className="text-purple-400 hover:text-purple-300"
+                    className="text-blue-400 hover:text-blue-300"
                   >
                     Privacy Policy
                   </Link>
@@ -305,7 +304,7 @@ export default function SignUp() {
 
               <Button
                 type="submit"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
@@ -326,7 +325,7 @@ export default function SignUp() {
                 Already have an account?{" "}
                 <Link
                   href="/auth/signin"
-                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
                 >
                   Sign in
                 </Link>

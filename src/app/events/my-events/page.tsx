@@ -154,7 +154,7 @@ export default function EventsPage() {
                 onClick={() => handleEventClick(event)}
                 className="cursor-pointer"
               >
-                <Card className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-colors cursor-pointer group overflow-hidden">
+                <Card className="bg-gray-900 border-gray-800 hover:border-blue-500 transition-colors cursor-pointer group overflow-hidden">
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={event.imageUrl}
@@ -162,7 +162,7 @@ export default function EventsPage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-4 left-4 flex flex-col gap-2">
-                      <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                         {event.category}
                       </span>
                       {(() => {
@@ -192,7 +192,7 @@ export default function EventsPage() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
+                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
                       {event.name}
                     </h3>
                     <p className="text-gray-400 text-sm mb-4 line-clamp-2">
@@ -223,7 +223,7 @@ export default function EventsPage() {
                           </span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-purple-400 font-medium">
+                          <span className="text-blue-400 font-medium">
                             {formatPrice(event.ticketPrice)}
                           </span>
                         </div>

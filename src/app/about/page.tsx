@@ -97,12 +97,12 @@ export default function About() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      <section className="relative py-20 bg-gradient-to-br from-purple-900 via-gray-900 to-indigo-900">
+      <section className="relative py-20 bg-gradient-to-br from-blue-900 via-gray-900 to-indigo-900">
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             About
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               {" "}
               myEvents
             </span>
@@ -124,7 +124,7 @@ export default function About() {
                 className="bg-gray-800/50 border-gray-700 text-center"
               >
                 <CardContent className="p-6">
-                  <div className="text-purple-400 flex justify-center mb-3">
+                  <div className="text-blue-400 flex justify-center mb-3">
                     {stat.icon}
                   </div>
                   <div className="text-3xl font-bold text-white mb-1">
@@ -148,14 +148,12 @@ export default function About() {
               power to bring people together, create lasting memories, and
               enrich lives in meaningful ways.
             </p>
-            <div className="bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-2xl p-8 backdrop-blur-sm border border-purple-500/20">
+            <div className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 rounded-2xl p-8 backdrop-blur-sm border border-blue-500/20">
               <blockquote className="text-2xl font-medium text-gray-200 italic">
                 "Every event is an opportunity to create magic. We're here to
                 make sure you never miss yours."
               </blockquote>
-              <cite className="text-purple-400 mt-4 block">
-                - myEvents Team
-              </cite>
+              <cite className="text-blue-400 mt-4 block">- myEvents Team</cite>
             </div>
           </div>
         </div>
@@ -179,7 +177,7 @@ export default function About() {
               >
                 <CardHeader>
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white">
+                    <div className="p-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full text-white">
                       {value.icon}
                     </div>
                     <CardTitle className="text-xl text-white">
@@ -256,7 +254,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="py-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50">
+      <section className="py-16 bg-gradient-to-r from-blue-900/50 to-indigo-900/50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Discover Amazing Events?

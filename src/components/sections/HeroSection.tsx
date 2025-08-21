@@ -6,7 +6,7 @@ import { Search, MapPin, Calendar } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-purple-900 via-gray-900 to-indigo-900">
+    <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-900 to-indigo-900">
       <div className="absolute inset-0 bg-black/30" />
 
       <div className="absolute inset-0 opacity-10">
@@ -17,7 +17,7 @@ export default function HeroSection() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Discover Amazing
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               {" "}
               Events
             </span>

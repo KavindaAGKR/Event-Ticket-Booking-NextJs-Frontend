@@ -17,13 +17,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", ...props }, ref) => {
     const variants = {
-      default: "bg-purple-600 text-white hover:bg-purple-700",
+      default: "bg-blue-600 text-white hover:bg-blue-700",
       destructive: "bg-red-600 text-white hover:bg-red-700",
       outline:
         "border border-gray-600 bg-transparent hover:bg-gray-800 text-white",
       secondary: "bg-gray-800 text-white hover:bg-gray-700",
       ghost: "hover:bg-gray-800 hover:text-white",
-      link: "text-purple-400 underline-offset-4 hover:underline",
+      link: "text-blue-400 underline-offset-4 hover:underline",
     };
 
     const sizes = {
@@ -36,7 +36,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 disabled:pointer-events-none disabled:opacity-50",
           variants[variant],
           sizes[size],
           className

@@ -52,7 +52,7 @@ export default function Features() {
       description:
         "Access your tickets on any device. Our mobile app makes event entry seamless.",
       icon: <Smartphone className="h-6 w-6" />,
-      color: "from-purple-500 to-pink-600",
+      color: "from-blue-500 to-cyan-600",
     },
     {
       id: "payment",
@@ -126,7 +126,7 @@ export default function Features() {
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-2xl p-8 backdrop-blur-sm">
+        <div className="mt-16 bg-gradient-to-r from-blue-900/50 to-indigo-900/50 rounded-2xl p-8 backdrop-blur-sm">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">

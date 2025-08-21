@@ -96,7 +96,7 @@ export default function Testimonials() {
             >
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold mr-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold mr-3">
                     {testimonial.avatar}
                   </div>
                   <div>
@@ -115,7 +115,7 @@ export default function Testimonials() {
                 </div>
 
                 <div className="relative">
-                  <Quote className="h-8 w-8 text-purple-400 opacity-50 absolute -top-2 -left-2" />
+                  <Quote className="h-8 w-8 text-blue-400 opacity-50 absolute -top-2 -left-2" />
                   <p className="text-gray-300 leading-relaxed pl-6">
                     {testimonial.comment}
                   </p>
@@ -123,7 +123,7 @@ export default function Testimonials() {
 
                 <div className="mt-4 pt-4 border-t border-gray-700">
                   <p className="text-sm text-gray-400">
-                    <span className="font-medium text-purple-400">
+                    <span className="font-medium text-blue-400">
                       {testimonial.event}
                     </span>
                     {" • "}

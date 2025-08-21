@@ -104,7 +104,7 @@ export default function ProfilePage() {
   const getRoleColor = (roles?: Array<"user" | "admin" | "organizer">) => {
     if (!roles || roles.length === 0) return "text-blue-400";
     if (roles.includes("admin")) return "text-red-400";
-    if (roles.includes("organizer")) return "text-purple-400";
+    if (roles.includes("organizer")) return "text-blue-400";
     return "text-blue-400";
   };
 
@@ -123,12 +123,12 @@ export default function ProfilePage() {
             <Card className="p-6 bg-gray-900 border-gray-800">
               <div className="text-center">
                 <div className="relative mx-auto w-24 h-24 mb-4">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                     <span className="text-white text-2xl font-bold">
                       {(user.name || user.email).charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <button className="absolute bottom-0 right-0 p-2 bg-purple-600 rounded-full hover:bg-purple-700 transition-colors">
+                  <button className="absolute bottom-0 right-0 p-2 bg-blue-600 rounded-full hover:bg-blue-700 transition-colors">
                     <Camera className="h-4 w-4 text-white" />
                   </button>
                 </div>

@@ -143,7 +143,7 @@ export default function EventDetailsPage() {
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
             <div className="flex items-center gap-4 mb-4 justify-between">
-              <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                 {event.category}
               </span>
               <div className="flex items-center gap-2">
