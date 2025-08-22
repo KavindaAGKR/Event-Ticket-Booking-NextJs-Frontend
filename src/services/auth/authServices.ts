@@ -39,7 +39,7 @@ async function apiCall(
   options: RequestInit = {}
 ): Promise<any> {
   try {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}/${endpoint}`;
     const token =
       typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
 
