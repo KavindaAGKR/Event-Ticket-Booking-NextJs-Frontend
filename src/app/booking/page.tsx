@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,7 +31,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export default function BookingPage() {
+function BookingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoading: authLoading } = useAuth();
@@ -544,5 +544,23 @@ export default function BookingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading booking...</p>
+      </div>
+    </div>
+  );
+}
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <BookingContent />
+    </Suspense>
   );
 }

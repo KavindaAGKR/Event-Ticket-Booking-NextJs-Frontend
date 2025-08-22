@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -17,10 +17,11 @@ import {
   verifyEmail,
   resendVerificationCode,
 } from "@/services/auth/authServices";
-
-export default function VerifyEmail() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const emailParam = searchParams.get("email");
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -30,11 +31,10 @@ export default function VerifyEmail() {
   const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
-    const emailParam = searchParams?.get("email");
     if (emailParam) {
       setEmail(decodeURIComponent(emailParam));
     }
-  }, [searchParams]);
+  }, [emailParam]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -114,157 +114,165 @@ export default function VerifyEmail() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-gray-900 to-indigo-900/20" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
+    <div className="relative z-10 w-full max-w-md">
+      <div className="mb-6">
+        <Link
+          href="/auth/signup"
+          className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Sign Up
+        </Link>
+      </div>
 
-      <div className="relative z-10 w-full max-w-md">
-        <div className="mb-6">
-          <Link
-            href="/auth/signup"
-            className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Sign Up
-          </Link>
-        </div>
-
-        <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
-          <CardHeader className="text-center">
-            {/* Email Icon */}
-            <div className="flex justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-                <Mail className="h-8 w-8 text-white" />
-              </div>
+      <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+              <Mail className="h-8 w-8 text-white" />
             </div>
+          </div>
 
-            <CardTitle className="text-2xl font-bold text-white">
-              Verify Your Email
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              {email ? (
-                <>
-                  We've sent a verification code to{" "}
-                  <span className="text-blue-400 font-medium">{email}</span>
-                </>
-              ) : (
-                "Please enter your email and verification code"
-              )}
-            </CardDescription>
-          </CardHeader>
+          <CardTitle className="text-2xl font-bold text-white">
+            Verify Your Email
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            {email ? (
+              <>
+                We've sent a verification code to{" "}
+                <span className="text-blue-400 font-medium">{email}</span>
+              </>
+            ) : (
+              "Please enter your email and verification code"
+            )}
+          </CardDescription>
+        </CardHeader>
 
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!email && (
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium text-gray-300"
-                  >
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 bg-gray-800 border-gray-600 text-white"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
+        <CardContent className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!email && (
               <div className="space-y-2">
                 <label
-                  htmlFor="verificationCode"
+                  htmlFor="email"
                   className="text-sm font-medium text-gray-300"
                 >
-                  Verification Code
+                  Email Address
                 </label>
                 <div className="relative">
-                  <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    id="verificationCode"
-                    type="text"
-                    placeholder="000 000"
-                    value={formatVerificationCode(verificationCode)}
-                    onChange={handleVerificationCodeChange}
-                    className="pl-10 bg-gray-800 border-gray-600 text-white text-center text-lg font-mono tracking-widest"
-                    maxLength={7}
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
                 </div>
-                <p className="text-xs text-gray-400 text-center">
-                  Enter the 6-digit code sent to your email
-                </p>
               </div>
-              {success && (
-                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
-                  <p className="text-green-400 text-sm text-center">
-                    {success}
-                  </p>
-                </div>
-              )}
-              {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
-                  <p className="text-red-400 text-sm text-center">{error}</p>
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                disabled={isLoading || verificationCode.length !== 6}
+            )}
+            <div className="space-y-2">
+              <label
+                htmlFor="verificationCode"
+                className="text-sm font-medium text-gray-300"
               >
-                {isLoading ? "Verifying..." : "Verify Email"}
-              </Button>
-            </form>
-
-            {/* Resend Code */}
-            <div className="text-center space-y-3">
-              <p className="text-gray-400 text-sm">Didn't receive the code?</p>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleResendCode}
-                disabled={isResending || countdown > 0 || !email}
-                className="border-gray-600 text-gray-300 hover:bg-gray-800"
-              >
-                <RefreshCw
-                  className={`h-4 w-4 mr-2 ${
-                    isResending ? "animate-spin" : ""
-                  }`}
+                Verification Code
+              </label>
+              <div className="relative">
+                <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  id="verificationCode"
+                  type="text"
+                  placeholder="000 000"
+                  value={formatVerificationCode(verificationCode)}
+                  onChange={handleVerificationCodeChange}
+                  className="pl-10 bg-gray-800 border-gray-600 text-white text-center text-lg font-mono tracking-widest"
+                  maxLength={7}
+                  required
                 />
-                {countdown > 0
-                  ? `Resend in ${countdown}s`
-                  : isResending
-                  ? "Sending..."
-                  : "Resend Code"}
-              </Button>
-
-              <p className="text-xs text-gray-500">
-                Check your spam folder if you don't see the email
+              </div>
+              <p className="text-xs text-gray-400 text-center">
+                Enter the 6-digit code sent to your email
               </p>
             </div>
+            {success && (
+              <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
+                <p className="text-green-400 text-sm text-center">{success}</p>
+              </div>
+            )}
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              </div>
+            )}
 
-            <div className="text-center pt-4 border-t border-gray-600">
-              <p className="text-gray-400 text-sm">
-                Already verified?{" "}
-                <Link
-                  href="/auth/signin"
-                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-                >
-                  Sign in
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={isLoading || verificationCode.length !== 6}
+            >
+              {isLoading ? "Verifying..." : "Verify Email"}
+            </Button>
+          </form>
+
+          <div className="text-center space-y-3">
+            <p className="text-gray-400 text-sm">Didn't receive the code?</p>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResendCode}
+              disabled={isResending || countdown > 0 || !email}
+              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${isResending ? "animate-spin" : ""}`}
+              />
+              {countdown > 0
+                ? `Resend in ${countdown}s`
+                : isResending
+                ? "Sending..."
+                : "Resend Code"}
+            </Button>
+
+            <p className="text-xs text-gray-500">
+              Check your spam folder if you don't see the email
+            </p>
+          </div>
+
+          <div className="text-center pt-4 border-t border-gray-600">
+            <p className="text-gray-400 text-sm">
+              Already verified?{" "}
+              <Link
+                href="/auth/signin"
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+              >
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p>Loading...</p>
       </div>
-    </main>
+    </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
