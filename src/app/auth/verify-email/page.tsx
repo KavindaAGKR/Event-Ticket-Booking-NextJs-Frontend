@@ -114,146 +114,152 @@ function VerifyEmailContent() {
   };
 
   return (
-    <div className="relative z-10 w-full max-w-md">
-      <div className="mb-6">
-        <Link
-          href="/auth/signup"
-          className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Sign Up
-        </Link>
-      </div>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="relative z-10 w-full max-w-md">
+        <div className="mb-6">
+          <Link
+            href="/auth/signup"
+            className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Sign Up
+          </Link>
+        </div>
 
-      <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-              <Mail className="h-8 w-8 text-white" />
+        <Card className="bg-gray-900/50 backdrop-blur-md border-gray-700">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+                <Mail className="h-8 w-8 text-white" />
+              </div>
             </div>
-          </div>
 
-          <CardTitle className="text-2xl font-bold text-white">
-            Verify Your Email
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            {email ? (
-              <>
-                We've sent a verification code to{" "}
-                <span className="text-blue-400 font-medium">{email}</span>
-              </>
-            ) : (
-              "Please enter your email and verification code"
-            )}
-          </CardDescription>
-        </CardHeader>
+            <CardTitle className="text-2xl font-bold text-white">
+              Verify Your Email
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              {email ? (
+                <>
+                  We've sent a verification code to{" "}
+                  <span className="text-blue-400 font-medium">{email}</span>
+                </>
+              ) : (
+                "Please enter your email and verification code"
+              )}
+            </CardDescription>
+          </CardHeader>
 
-        <CardContent className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {!email && (
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!email && (
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium text-gray-300"
+                  >
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10 bg-gray-800 border-gray-600 text-white"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
               <div className="space-y-2">
                 <label
-                  htmlFor="email"
+                  htmlFor="verificationCode"
                   className="text-sm font-medium text-gray-300"
                 >
-                  Email Address
+                  Verification Code
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 bg-gray-800 border-gray-600 text-white"
+                    id="verificationCode"
+                    type="text"
+                    placeholder="000 000"
+                    value={formatVerificationCode(verificationCode)}
+                    onChange={handleVerificationCodeChange}
+                    className="pl-10 bg-gray-800 border-gray-600 text-white text-center text-lg font-mono tracking-widest"
+                    maxLength={7}
                     required
                   />
                 </div>
+                <p className="text-xs text-gray-400 text-center">
+                  Enter the 6-digit code sent to your email
+                </p>
               </div>
-            )}
-            <div className="space-y-2">
-              <label
-                htmlFor="verificationCode"
-                className="text-sm font-medium text-gray-300"
+              {success && (
+                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
+                  <p className="text-green-400 text-sm text-center">
+                    {success}
+                  </p>
+                </div>
+              )}
+              {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
+                  <p className="text-red-400 text-sm text-center">{error}</p>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={isLoading || verificationCode.length !== 6}
               >
-                Verification Code
-              </label>
-              <div className="relative">
-                <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="verificationCode"
-                  type="text"
-                  placeholder="000 000"
-                  value={formatVerificationCode(verificationCode)}
-                  onChange={handleVerificationCodeChange}
-                  className="pl-10 bg-gray-800 border-gray-600 text-white text-center text-lg font-mono tracking-widest"
-                  maxLength={7}
-                  required
+                {isLoading ? "Verifying..." : "Verify Email"}
+              </Button>
+            </form>
+
+            <div className="text-center space-y-3">
+              <p className="text-gray-400 text-sm">Didn't receive the code?</p>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResendCode}
+                disabled={isResending || countdown > 0 || !email}
+                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              >
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${
+                    isResending ? "animate-spin" : ""
+                  }`}
                 />
-              </div>
-              <p className="text-xs text-gray-400 text-center">
-                Enter the 6-digit code sent to your email
+                {countdown > 0
+                  ? `Resend in ${countdown}s`
+                  : isResending
+                  ? "Sending..."
+                  : "Resend Code"}
+              </Button>
+
+              <p className="text-xs text-gray-500">
+                Check your spam folder if you don't see the email
               </p>
             </div>
-            {success && (
-              <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-md">
-                <p className="text-green-400 text-sm text-center">{success}</p>
-              </div>
-            )}
-            {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md">
-                <p className="text-red-400 text-sm text-center">{error}</p>
-              </div>
-            )}
 
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              disabled={isLoading || verificationCode.length !== 6}
-            >
-              {isLoading ? "Verifying..." : "Verify Email"}
-            </Button>
-          </form>
-
-          <div className="text-center space-y-3">
-            <p className="text-gray-400 text-sm">Didn't receive the code?</p>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResendCode}
-              disabled={isResending || countdown > 0 || !email}
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${isResending ? "animate-spin" : ""}`}
-              />
-              {countdown > 0
-                ? `Resend in ${countdown}s`
-                : isResending
-                ? "Sending..."
-                : "Resend Code"}
-            </Button>
-
-            <p className="text-xs text-gray-500">
-              Check your spam folder if you don't see the email
-            </p>
-          </div>
-
-          <div className="text-center pt-4 border-t border-gray-600">
-            <p className="text-gray-400 text-sm">
-              Already verified?{" "}
-              <Link
-                href="/auth/signin"
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="text-center pt-4 border-t border-gray-600">
+              <p className="text-gray-400 text-sm">
+                Already verified?{" "}
+                <Link
+                  href="/auth/signin"
+                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
