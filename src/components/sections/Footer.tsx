@@ -16,13 +16,11 @@ import {
 export default function Footer() {
   return (
     <footer className="bg-gray-950 border-t border-gray-800">
-
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
                 <span className="text-white font-bold">M</span>
               </div>
               <span className="text-xl font-bold text-white">myEvents</span>
@@ -35,25 +33,25 @@ export default function Footer() {
 
             <div className="flex space-x-4">
               <button
-                className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
+                className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors"
                 onClick={() => {}}
               >
                 <Facebook className="h-5 w-5 text-white" />
               </button>
               <button
-                className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
+                className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors"
                 onClick={() => {}}
               >
                 <Twitter className="h-5 w-5 text-white" />
               </button>
               <button
-                className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
+                className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors"
                 onClick={() => {}}
               >
                 <Instagram className="h-5 w-5 text-white" />
               </button>
               <button
-                className="p-2 bg-gray-800 rounded-full hover:bg-purple-600 transition-colors"
+                className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 transition-colors"
                 onClick={() => {}}
               >
                 <Youtube className="h-5 w-5 text-white" />
@@ -70,7 +68,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/events"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Browse Events
                 </Link>
@@ -78,7 +76,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/categories"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Categories
                 </Link>
@@ -86,7 +84,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/venues"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Venues
                 </Link>
@@ -94,7 +92,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/organizers"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   For Organizers
                 </Link>
@@ -102,7 +100,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/gift-cards"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Gift Cards
                 </Link>
@@ -117,7 +115,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/help"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Help Center
                 </Link>
@@ -125,7 +123,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -133,7 +131,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/refunds"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Refund Policy
                 </Link>
@@ -141,7 +139,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/safety"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Safety Guidelines
                 </Link>
@@ -149,7 +147,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/accessibility"
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
+                  className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Accessibility
                 </Link>
@@ -222,13 +220,13 @@ export default function Footer() {
             <div className="flex space-x-6 text-sm">
               <Link
                 href="/privacy"
-                className="text-gray-400 hover:text-purple-400 transition-colors"
+                className="text-gray-400 hover:text-blue-400 transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-gray-400 hover:text-purple-400 transition-colors"
+                className="text-gray-400 hover:text-blue-400 transition-colors"
               >
                 Terms of Service
               </Link>
