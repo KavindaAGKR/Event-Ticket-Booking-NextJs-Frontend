@@ -52,13 +52,13 @@ NEXT_PUBLIC_API_BASE_URL_BOOKINGS=https://cloud-api.cisk.site
 
 ### 4. Run in Development Mode
 
-The frontend runs locally on port 3000 by default.
+The frontend runs locally on port 4000.
 
 ```bash
 npm run dev
 ```
 
-Now open [http://localhost:3000](http://localhost:3000) in your browser.
+Now open [http://localhost:4000](http://localhost:4000) in your browser.
 
 ### 5. Build for Production
 ```bash
