@@ -93,7 +93,7 @@ export async function createBooking(
   try {
     console.log("Creating booking with data:", bookingData);
 
-    const response = await bookingApiCall("/bookings", {
+    const response = await bookingApiCall("/bookings/", {
       method: "POST",
       body: JSON.stringify(bookingData),
     });
@@ -109,7 +109,7 @@ export async function createBooking(
 // Get all bookings for current user
 export async function getUserBookings(): Promise<BookingResponse[]> {
   try {
-    const response = await bookingApiCall("/bookings");
+    const response = await bookingApiCall("/bookings/");
     return response.data || [];
   } catch (error) {
     console.error("Failed to fetch user bookings:", error);
